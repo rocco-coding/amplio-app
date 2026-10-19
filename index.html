@@ -10,6 +10,11 @@
     @media(max-width:780px){.topbar{height:64px;padding:0 18px}.tagline{display:none}.layout{display:block;min-height:calc(100vh - 64px)}aside{position:fixed;bottom:0;left:0;right:0;height:67px;border-right:0;border-top:1px solid var(--line);padding:5px 8px;z-index:6}.nav{display:flex;justify-content:space-around;gap:2px}.nav button{font-size:10px;text-align:center;padding:8px 9px;flex:1}.nav button span{display:block;font-size:17px;line-height:20px}.aside-note{display:none}.main{padding:26px 18px 95px}.heading{font-size:28px}.hero{padding:24px;min-height:195px}.hero h2{font-size:24px}.orb{width:76px;height:76px;flex-basis:76px;font-size:25px;box-shadow:0 0 0 9px #ffffff0b,0 0 0 18px #ffffff08}.grid{grid-template-columns:1fr}.card{padding:20px}.form-card{padding:22px 18px}.top-actions .quiet{display:none}}
     @media(max-width:390px){.hero{padding:20px}.orb{width:60px;height:60px;flex-basis:60px}.hero p{font-size:13px}.weekdays{gap:4px}.day{padding:8px 2px}}
   </style>
+  <style>
+    .choice.primary{border-color:#77a2fa;background:#f4f8ff;box-shadow:inset 3px 0 0 var(--blue)}
+    .choice-role{display:inline-block;margin:0 0 5px;padding:3px 7px;border-radius:99px;background:var(--sky);color:#2459bd;font-size:10px;font-weight:700;letter-spacing:.03em}
+    .question-note{padding:12px 14px;border-radius:12px;background:#f5f8fd;color:#52647e;font-size:12px;margin:16px 0}
+  </style>
 </head>
 <body><div class="app">
   <header class="topbar"><div class="brand"><span class="mark">a</span><span>amplio <span class="tagline">· Progress, on your terms</span></span></div><div class="top-actions"><button class="quiet install" id="installBtn">＋ Install app</button><button class="quiet" id="resetBtn">Reset demo</button></div></header>
@@ -20,22 +25,452 @@
       <div class="grid"><article class="card"><h3>This week</h3><p class="muted">Showing up in ways that work for you.</p><div class="weekdays" id="weekdays"></div><div class="statrow"><div class="stat"><b id="doneCount">0</b><span>steps completed</span></div><div class="stat"><b id="streakCount">0</b><span>steady days</span></div><div class="stat"><b id="checkinCount">0</b><span>check-ins</span></div></div></article><article class="card"><h3>Next small step</h3><p class="muted">No pressure. Pick something that fits today.</p><div class="activity"><div class="activity-icon">☀</div><div><strong id="nextTitle">Take a gentle 10-minute walk</strong><small id="nextSub">A little fresh air, at your pace</small></div></div><button class="btn secondary block" id="routineBtn">See my routine</button></article></div>
       <div class="card week"><h3>A note from amplio</h3><p class="muted">Your routine should fit around your life. If today gets busy, that’s useful information—we can make the next step smaller.</p></div>
     </section>
-    <section class="view" id="onboarding"><div class="eyebrow">A GOOD PLACE TO BEGIN</div><h1 class="heading">Let’s find your starting point.</h1><p class="subheading">A few quick questions help us suggest a routine that feels realistic. There are no wrong answers.</p><div class="form-card"><div style="display:flex;justify-content:space-between;color:var(--muted);font-size:12px"><span id="stepLabel">Question 1 of 4</span><span>About 1 minute</span></div><div class="progress"><i id="progressBar" style="width:25%"></i></div><div id="questionArea"></div><div class="form-footer"><button class="btn secondary" id="backBtn">Back</button><button class="btn" id="nextBtn">Continue</button></div><p class="notice">Demo only: answers stay in this browser on this device. Don’t enter health details.</p></div></section>
-    <section class="view" id="routine"><div class="eyebrow">YOUR PERSONAL STARTER ROUTINE</div><h1 class="heading">A plan that can flex.</h1><p class="subheading">Built around the time and movement you said feels manageable. Change it whenever you need.</p><div class="card"><h3>This week’s gentle focus</h3><p class="muted" id="routineIntro">A few achievable steps, with room for real life.</p><div class="routine-list" id="routineList"></div><div id="routineSaved" class="notice">Your ticks are saved on this device.</div></div><button class="btn" style="margin-top:16px" data-goto="checkin">How did this week feel?</button></section>
+    <section class="view" id="onboarding"><div class="eyebrow">A GOOD PLACE TO BEGIN</div><h1 class="heading">Let’s find your starting point.</h1><p class="subheading">A few focused questions help amplio understand what matters to you and what fits your week.</p><div class="form-card"><div style="display:flex;justify-content:space-between;color:var(--muted);font-size:12px"><span id="stepLabel">Question 1</span><span>About 2–3 minutes</span></div><div class="progress"><i id="progressBar" style="width:10%"></i></div><div id="questionArea" aria-live="polite"></div><div class="form-footer"><button type="button" class="btn secondary" id="backBtn">Back</button><button type="button" class="btn" id="nextBtn">Continue</button></div><p class="notice">Prototype only: answers, including your general safety choice, stay in this browser on this device. Don’t enter real health or customer information. This app does not assess health risks or give medical advice.</p><p class="notice">No payment is taken in this demo. Any future paid membership should show its full recurring price before the detailed questionnaire begins.</p></div></section>
+    <section class="view" id="routine"><div class="eyebrow">YOUR PERSONAL STARTER ROUTINE</div><h1 class="heading">A plan that can flex.</h1><p class="subheading">A small starting rhythm shaped around your priorities and available time. Change or skip any step whenever you need.</p><div class="card"><h3>This week’s gentle focus</h3><p class="muted" id="routineIntro">A few achievable steps, with room for real life.</p><div class="routine-list" id="routineList"></div><div id="routineSaved" class="notice">Your ticks are saved on this device.</div></div><button class="btn" style="margin-top:16px" data-goto="checkin">How did this week feel?</button></section>
     <section class="view" id="checkin"><div class="eyebrow">A QUICK WEEKLY PAUSE</div><h1 class="heading">How has this week felt?</h1><p class="subheading">Your answers help shape what comes next. Keep it simple and honest.</p><div class="form-card"><div class="check-grid"><div class="check-row"><strong>How manageable did your routine feel?</strong><div class="rating" data-rating="manage"></div></div><div class="check-row"><strong>How was your energy this week?</strong><div class="rating" data-rating="energy"></div></div><div class="check-row"><strong>How much did you enjoy your movement?</strong><div class="rating" data-rating="enjoy"></div></div></div><label for="note" style="font-size:13px;font-weight:650;color:var(--navy)">Anything you’d like to change?</label><textarea id="note" rows="3" placeholder="For example: shorter sessions would suit me better"></textarea><button class="btn block" id="saveCheckin">Save this check-in</button><div id="checkinSuccess" class="success hidden">Saved on this device. Thanks for checking in with yourself.</div><p class="notice">Demo only. Check-ins are not sent to a coach or stored on a server.</p></div></section>
     <section class="view" id="about"><div class="eyebrow">HELLO, WE’RE AMPLIO</div><h1 class="heading">Progress, on your terms.</h1><p class="subheading">Wellbeing that starts with your real life, and adapts as it changes.</p><div class="grid"><article class="card"><h3>Small steps matter</h3><p class="muted">You don’t need a perfect routine to make progress. Choose changes that feel possible, and build from there.</p></article><article class="card"><h3>Life is allowed to change</h3><p class="muted">Busy week? Different priorities? Your plan can flex. Adjusting it is part of the process.</p></article></div><div class="card week"><h3>What this demo is</h3><p class="muted">A local, installable app prototype to explore the experience. It has no account system, coach inbox, secure database, or health guidance. Your demo answers are saved only in this browser.</p></div><button class="btn secondary" style="margin-top:17px" data-goto="onboarding">Set up my routine</button></section>
   </main></div></div>
   <script>
-    const keys=['amplio_profile','amplio_done','amplio_checkins','amplio_ratings'];let profile=JSON.parse(localStorage.getItem(keys[0])||'null'),done=JSON.parse(localStorage.getItem(keys[1])||'{}'),checkins=JSON.parse(localStorage.getItem(keys[2])||'[]');
-    const questions=[{title:'What would you like to feel more of?',hint:'Choose the closest fit for now.',opts:[['More energy','Everyday movement and routines that support how I feel.'],['More strength','Build confidence and feel stronger in daily life.'],['More consistency','Find a rhythm I can return to, even after a busy week.'],['A bit of everything','Make a few small improvements across my wellbeing.']]},{title:'How much time feels realistic most days?',hint:'We’ll work with the time you have.',opts:[['About 5–10 minutes','Short steps I can fit into a busy day.'],['About 15–20 minutes','A little space for a focused session.'],['30 minutes or more','I have room for a longer session some days.']]},{title:'What kind of movement sounds comfortable?',hint:'You can always change your mind later.',opts:[['At home, no equipment','Simple movement using what I already have.'],['Walking or outdoors','Fresh air and gentle movement.'],['A mix of things','Variety sounds good to me.'],['I’m not sure yet','I’d like to explore gently.']]},{title:'How many days would you like to start with?',hint:'A starting point, not a target to pass or fail.',opts:[['2 days a week','A light rhythm with plenty of breathing room.'],['3 days a week','A steady few moments across the week.'],['Most days, kept gentle','Tiny steps can be part of my everyday.']]}];let step=0,answers={};
-    const $=s=>document.querySelector(s), $$=(s,root=document)=>[...root.querySelectorAll(s)];function save(){localStorage.setItem(keys[0],JSON.stringify(profile));localStorage.setItem(keys[1],JSON.stringify(done));localStorage.setItem(keys[2],JSON.stringify(checkins))}function show(id){$$('.view').forEach(v=>v.classList.toggle('active',v.id===id));$$('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.view===id));if(id==='routine')renderRoutine();window.scrollTo({top:0,behavior:'smooth'})}function nav(id){if(id==='onboarding'){step=0;answers={};renderQuestion()}show(id)}
-    $$('.nav button').forEach(b=>b.addEventListener('click',()=>show(b.dataset.view)));$$('[data-goto]').forEach(b=>b.onclick=()=>nav(b.dataset.goto));$('#heroBtn').onclick=()=>profile?show('routine'):nav('onboarding');$('#routineBtn').onclick=()=>show('routine');$('#backBtn').onclick=()=>{if(step>0){step--;renderQuestion()}else show('home')};$('#nextBtn').onclick=()=>{if(!answers[step]){toast('Choose whichever feels closest for now.');return}if(step<questions.length-1){step++;renderQuestion()}else{profile=answers;save();updateHome();show('routine')}};
-    function renderQuestion(){let q=questions[step];$('#stepLabel').textContent=`Question ${step+1} of ${questions.length}`;$('#progressBar').style.width=`${(step+1)/questions.length*100}%`;$('#questionArea').innerHTML=`<h2 class="question">${q.title}</h2><p class="muted">${q.hint}</p><div class="choices">${q.opts.map(o=>`<button class="choice ${answers[step]===o[0]?'selected':''}" data-choice="${o[0]}"><strong>${o[0]}</strong><small>${o[1]}</small></button>`).join('')}</div>`;$$('[data-choice]').forEach(b=>b.onclick=()=>{answers[step]=b.dataset.choice;renderQuestion()});$('#backBtn').style.visibility=step===0?'hidden':'visible';$('#nextBtn').textContent=step===questions.length-1?'Create my routine':'Continue'}
-    function routineItems(){let days=profile?.[3]==='2 days a week'?2:profile?.[3]==='Most days, kept gentle'?5:3;let dur=profile?.[1]?.startsWith('About 5')?'10':profile?.[1]?.startsWith('About 15')?'15':'20';let move=profile?.[2]?.includes('Walking')?'A relaxed walk':profile?.[2]?.includes('home')?'A no-equipment movement break':'Choose a movement you enjoy';return Array.from({length:days},(_,i)=>({id:'step'+i,title:i%2===0?`${dur}-minute ${move.toLowerCase()}`:`${dur}-minute gentle strength and mobility`,sub:i===0?'Begin at a pace that feels comfortable':'Leave space between sessions if that suits you'}))}
-    function renderRoutine(){let items=routineItems();$('#routineIntro').textContent=`A gentle ${items.length}-day starting rhythm, shaped around your answers. If it doesn’t fit, make it smaller.`;$('#routineList').innerHTML=items.map((x,i)=>`<label class="routine ${done[x.id]?'checked':''}"><input type="checkbox" data-id="${x.id}" ${done[x.id]?'checked':''}><span><strong>${['A first step','A little more','Keep it easy','Find your rhythm','A moment for you'][i]||'Your next step'}</strong><small>${x.title} · ${x.sub}</small></span></label>`).join('');$$('[data-id]').forEach(c=>c.onchange=()=>{done[c.dataset.id]=c.checked;save();renderRoutine();updateHome()})}
-    function updateHome(){if(profile){$('#hello').textContent='Welcome back to your space.';$('#heroTitle').textContent='Your routine is ready to flex.';$('#heroText').textContent='You’ve chosen a starting point that fits your life. Take it one step at a time.';$('#heroBtn').textContent='View my routine';$('#nextTitle').textContent=routineItems().find(x=>!done[x.id])?.title||'You’ve completed your steps';$('#nextSub').textContent=Object.values(done).filter(Boolean).length?'Every small step adds up':'A gentle place to begin';}let count=Object.values(done).filter(Boolean).length;$('#doneCount').textContent=count;$('#streakCount').textContent=Math.min(count,7);$('#checkinCount').textContent=checkins.length;let date=new Date(),day=date.getDay(),monday=(day+6)%7,names=['M','T','W','T','F','S','S'];$('#weekdays').innerHTML=names.map((n,i)=>`<div class="day ${i===monday?'today':''} ${i<count?'done':''}"><b>${n}</b>${i<count?'✓':'·'}</div>`).join('')}
-    $$('.rating').forEach(group=>{let kind=group.dataset.rating;group.innerHTML=[1,2,3,4,5].map(n=>`<button type="button" data-n="${n}">${n}</button>`).join('');group.onclick=e=>{if(e.target.dataset.n){$$('button',group).forEach(b=>b.classList.toggle('sel',b===e.target));let r=JSON.parse(localStorage.getItem(keys[3])||'{}');r[kind]=Number(e.target.dataset.n);localStorage.setItem(keys[3],JSON.stringify(r))}}});$('#saveCheckin').onclick=()=>{checkins.push({date:new Date().toISOString(),note:$('#note').value,ratings:JSON.parse(localStorage.getItem(keys[3])||'{}')});save();$('#note').value='';$('#checkinSuccess').classList.remove('hidden');updateHome();setTimeout(()=>$('#checkinSuccess').classList.add('hidden'),4000)};
-    function toast(s){let t=document.createElement('div');t.className='toast';t.textContent=s;document.body.append(t);setTimeout(()=>t.remove(),2200)}$('#resetBtn').onclick=()=>{if(confirm('Clear this demo’s saved routine and check-ins from this browser?')){keys.forEach(k=>localStorage.removeItem(k));location.reload()}};
-    let installEvent;window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();installEvent=e;$('#installBtn').classList.add('show')});$('#installBtn').onclick=async()=>{if(installEvent){installEvent.prompt();await installEvent.userChoice;installEvent=null;$('#installBtn').classList.remove('show')}else toast('On iPhone: open the Share menu in Safari, then choose Add to Home Screen.')};if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));updateHome();
+    const keys = ['amplio_profile_v2', 'amplio_done_v2', 'amplio_checkins_v2', 'amplio_ratings_v2'];
+    const previousKeys = ['amplio_profile', 'amplio_done', 'amplio_checkins', 'amplio_ratings'];
+    function readLocal(key, fallback) {
+      try { return JSON.parse(localStorage.getItem(key) || 'null') ?? fallback; }
+      catch { return fallback; }
+    }
+    let profile = readLocal(keys[0], null);
+    let done = readLocal(keys[1], {});
+    let checkins = readLocal(keys[2], []);
+    let step = 0;
+    let answers = createEmptyAnswers();
+    let activeSteps = [];
+
+    const goalOptions = [
+      { id: 'strength', label: 'Build strength', detail: 'For everyday tasks, exercise or sport.' },
+      { id: 'stamina', label: 'Improve stamina', detail: 'Feel more capable during walks, stairs or longer activity.' },
+      { id: 'energy', label: 'Have more energy', detail: 'Explore routines around sleep, movement or your daily rhythm.' },
+      { id: 'food', label: 'Improve my eating habits', detail: 'Make meals more regular, varied or easier to plan.' },
+      { id: 'routines', label: 'Build healthier daily routines', detail: 'Choose a practical area of everyday life to work on.' },
+      { id: 'habit', label: 'Change a habit', detail: 'Get support with smoking, alcohol or another habit.' }
+    ];
+    const goalLabels = Object.fromEntries(goalOptions.map(option => [option.id, option.label]));
+    const goalQuestions = {
+      strength: {
+        title: 'What would you like strength to help with?',
+        hint: 'Choose the outcome that matters most to you.',
+        options: [
+          { id: 'daily', label: 'Everyday tasks', detail: 'Feel more capable with lifting, carrying or getting around.' },
+          { id: 'gym', label: 'Gym or weights', detail: 'Build confidence with strength training.' },
+          { id: 'sport', label: 'Sport or general strength', detail: 'Feel stronger for the activities I enjoy.' },
+          { id: 'unsure', label: 'I’m not sure yet', detail: 'Help me start with the basics.' }
+        ]
+      },
+      stamina: {
+        title: 'What would improved stamina mean for you?',
+        hint: 'Pick the closest fit; you can change it later.',
+        options: [
+          { id: 'daily', label: 'Feel more comfortable day to day', detail: 'For example, walking or using stairs.' },
+          { id: 'longer', label: 'Keep going for longer', detail: 'Build confidence with longer, steady activity.' },
+          { id: 'bursts', label: 'Feel more capable in short bursts', detail: 'For example, sport, hills or brief efforts.' },
+          { id: 'unsure', label: 'General stamina', detail: 'I’m still working out what I want.' }
+        ]
+      },
+      energy: {
+        title: 'What would you like to work on first?',
+        hint: 'This helps us understand your preference; amplio can’t assess causes of low energy.',
+        options: [
+          { id: 'sleep', label: 'A steadier sleep or wind-down routine', detail: 'Small changes to my evening rhythm.' },
+          { id: 'move', label: 'More movement in my week', detail: 'A manageable way to move a little more.' },
+          { id: 'day', label: 'A more settled daily rhythm', detail: 'Make room for a few regular routines.' },
+          { id: 'unsure', label: 'I’m not sure yet', detail: 'Help me find a starting point.' }
+        ]
+      },
+      food: {
+        title: 'What would make eating well easier for you?',
+        hint: 'We focus on everyday routines, not diets or medical nutrition advice.',
+        options: [
+          { id: 'regular', label: 'Eat at more regular times', detail: 'Make meals feel less rushed or easy to miss.' },
+          { id: 'plan', label: 'Plan meals ahead', detail: 'Make day-to-day choices easier.' },
+          { id: 'variety', label: 'Add more variety', detail: 'Explore simple ways to vary what I eat.' },
+          { id: 'cook', label: 'Feel more confident preparing food', detail: 'Build a simple cooking routine.' },
+          { id: 'unsure', label: 'I’m not sure yet', detail: 'Help me start with one small step.' }
+        ]
+      },
+      routines: {
+        title: 'Which daily routine would you like to start with?',
+        hint: 'Choose one area for now. You can add another later.',
+        options: [
+          { id: 'sleep', label: 'Sleep or winding down', detail: 'Create a more consistent evening routine.' },
+          { id: 'move', label: 'Everyday movement', detail: 'Find small opportunities to move more.' },
+          { id: 'meals', label: 'Meal planning', detail: 'Make regular meals easier to fit into my week.' },
+          { id: 'pause', label: 'Make space to pause', detail: 'Build a small break into a busy day.' },
+          { id: 'unsure', label: 'I’m not sure yet', detail: 'Help me choose a manageable first step.' }
+        ]
+      },
+      habit: {
+        title: 'Which habit would you like support with?',
+        hint: 'No details needed. Smoking and alcohol changes need appropriate specialist support; this demo doesn’t provide quitting, medication or alcohol-reduction plans.',
+        options: [
+          { id: 'smoking', label: 'Smoking or nicotine', detail: 'Help me find a suitable support route.' },
+          { id: 'alcohol', label: 'Alcohol', detail: 'Help me find a suitable support route.' },
+          { id: 'other', label: 'Another habit', detail: 'Help me decide on one small next step.' },
+          { id: 'unsure', label: 'I’m not sure yet', detail: 'I’d like to explore my options.' }
+        ]
+      }
+    };
+
+    const $ = selector => document.querySelector(selector);
+    const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
+    function createEmptyAnswers() {
+      return { goals: [], goalDetails: {}, daysPerWeek: '', minutesPerStep: '', movementSetting: '', activitySafety: '' };
+    }
+    function requiresMovementAdvice(goals, details) {
+      return goals.includes('strength') || goals.includes('stamina') ||
+        (goals.includes('energy') && details.energy === 'move') ||
+        (goals.includes('routines') && details.routines === 'move');
+    }
+    function getQuestionSteps() {
+      const questions = [{
+        id: 'goals',
+        type: 'goals',
+        title: 'What would you most like to improve?',
+        hint: 'Choose up to three. Your first choice is your main goal; you can add more later.',
+        options: goalOptions
+      }];
+      answers.goals.forEach(goalId => {
+        const followUp = goalQuestions[goalId];
+        if (followUp) questions.push({ ...followUp, id: 'detail_' + goalId, type: 'single', goalId });
+      });
+      questions.push({
+        id: 'daysPerWeek',
+        type: 'single',
+        title: 'How often could you realistically make time for a small step?',
+        hint: 'Think about a normal week, not your busiest or best week.',
+        options: [
+          { id: '1', label: 'About once a week', detail: 'A gentle place to begin.' },
+          { id: '2', label: 'About twice a week', detail: 'A couple of planned moments.' },
+          { id: '3', label: 'About three times a week', detail: 'A steady rhythm, with room for rest.' },
+          { id: '4', label: 'Four or more times a week', detail: 'Short steps can be spread across the week.' },
+          { id: 'varies', label: 'It changes from week to week', detail: 'We can keep the plan flexible.' }
+        ]
+      });
+      questions.push({
+        id: 'minutesPerStep',
+        type: 'single',
+        title: 'How much time can a planned step usually take?',
+        hint: 'This is a guide, not a commitment.',
+        options: [
+          { id: '5_10', label: 'About 5–10 minutes', detail: 'Keep it very manageable.' },
+          { id: '11_20', label: 'About 11–20 minutes', detail: 'A little more room when it suits me.' },
+          { id: '21_30', label: 'About 21–30 minutes', detail: 'I can sometimes make space for longer.' },
+          { id: 'varies', label: 'It varies', detail: 'Keep the steps adaptable.' }
+        ]
+      });
+      if (requiresMovementAdvice(answers.goals, answers.goalDetails)) {
+        questions.push({
+          id: 'movementSetting',
+          type: 'single',
+          title: 'Where or how would you prefer to move?',
+          hint: 'Choose what feels convenient. You can change this later.',
+          options: [
+            { id: 'home', label: 'At home, with little or no equipment', detail: 'Keep setup simple.' },
+            { id: 'outdoors', label: 'Outdoors', detail: 'For example, walking or being outside.' },
+            { id: 'gym', label: 'At a gym', detail: 'I have access to gym equipment.' },
+            { id: 'group', label: 'Classes, sport or a group activity', detail: 'I like moving with other people.' },
+            { id: 'unsure', label: 'No preference yet', detail: 'Help me explore.' }
+          ]
+        });
+        questions.push({
+          id: 'activitySafety',
+          type: 'single',
+          title: 'A quick safety check',
+          hint: 'Before this demo suggests movement, is there a current injury, health condition or professional advice that may affect what is suitable? No details or diagnosis needed.',
+          note: 'A “no concerns” answer is not medical clearance. If you are unsure, choose the cautious option. This prototype can’t assess whether exercise is safe for you.',
+          options: [
+            { id: 'clear', label: 'No concerns I know of', detail: 'I understand this is not medical clearance.' },
+            { id: 'pause', label: 'Yes, or I’m not sure', detail: 'The demo will hold back on an activity plan.' },
+            { id: 'pause_private', label: 'I’d rather not answer', detail: 'That’s okay; the demo will hold back on an activity plan.' }
+          ]
+        });
+      }
+      return questions;
+    }
+    function save() {
+      localStorage.setItem(keys[0], JSON.stringify(profile));
+      localStorage.setItem(keys[1], JSON.stringify(done));
+      localStorage.setItem(keys[2], JSON.stringify(checkins));
+    }
+    function show(id) {
+      $$('.view').forEach(view => view.classList.toggle('active', view.id === id));
+      $$('.nav button').forEach(button => button.classList.toggle('active', button.dataset.view === id));
+      if (id === 'routine') renderRoutine();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    function nav(id) {
+      if (id === 'onboarding') {
+        step = 0;
+        answers = createEmptyAnswers();
+        renderQuestion();
+      }
+      show(id);
+    }
+    $$('.nav button').forEach(button => button.addEventListener('click', () => show(button.dataset.view)));
+    $$('[data-goto]').forEach(button => button.onclick = () => nav(button.dataset.goto));
+    $('#heroBtn').onclick = () => profile ? show('routine') : nav('onboarding');
+    $('#routineBtn').onclick = () => show('routine');
+    $('#backBtn').onclick = () => {
+      if (step > 0) { step--; renderQuestion(); }
+      else show('home');
+    };
+    $('#nextBtn').onclick = () => {
+      const question = activeSteps[step];
+      const value = question?.goalId ? answers.goalDetails[question.goalId] : answers[question?.id];
+      if (question?.type === 'goals' && answers.goals.length === 0) {
+        toast('Choose one main goal to begin.');
+        return;
+      }
+      if (question?.type === 'single' && !value) {
+        toast('Choose the answer that feels closest.');
+        return;
+      }
+      if (step < activeSteps.length - 1) {
+        step++;
+        renderQuestion();
+      } else {
+        finishOnboarding();
+      }
+    };
+
+    function renderQuestion() {
+      activeSteps = getQuestionSteps();
+      const question = activeSteps[step];
+      if (!question) return;
+      $('#stepLabel').textContent = 'Question ' + (step + 1) + ' of ' + activeSteps.length;
+      $('#progressBar').style.width = ((step + 1) / activeSteps.length * 100) + '%';
+      const goalPage = question.type === 'goals';
+      const optionsHtml = question.options.map(option => {
+        const selected = goalPage ? answers.goals.includes(option.id) :
+          (question.goalId ? answers.goalDetails[question.goalId] : answers[question.id]) === option.id;
+        const primary = goalPage && answers.goals[0] === option.id;
+        const role = primary ? '<span class="choice-role">MAIN GOAL</span>' :
+          (goalPage && selected ? '<span class="choice-role">ALSO A PRIORITY</span>' : '');
+        return '<button type="button" class="choice' + (selected ? ' selected' : '') + (primary ? ' primary' : '') +
+          '" data-choice="' + option.id + '" aria-pressed="' + selected + '">' + role +
+          '<strong>' + option.label + '</strong><small>' + option.detail + '</small></button>';
+      }).join('');
+      const note = question.note ? '<div class="question-note">' + question.note + '</div>' : '';
+      const goalHint = goalPage ? '<div class="question-note">The first one you choose becomes your main goal. Add up to two more if they matter too. Tap a selected goal to remove it.</div>' : '';
+      $('#questionArea').innerHTML = '<h2 class="question">' + question.title + '</h2><p class="muted">' +
+        question.hint + '</p>' + goalHint + '<div class="choices">' + optionsHtml + '</div>' + note;
+      $$('[data-choice]').forEach(button => button.onclick = () => {
+        if (goalPage) {
+          const goalId = button.dataset.choice;
+          if (answers.goals.includes(goalId)) {
+            answers.goals = answers.goals.filter(id => id !== goalId);
+            delete answers.goalDetails[goalId];
+          } else if (answers.goals.length < 3) {
+            answers.goals.push(goalId);
+          } else {
+            toast('Choose up to three goals. You can add more later.');
+            return;
+          }
+        } else if (question.goalId) {
+          answers.goalDetails[question.goalId] = button.dataset.choice;
+        } else {
+          answers[question.id] = button.dataset.choice;
+        }
+        renderQuestion();
+      });
+      $('#backBtn').style.visibility = step === 0 ? 'hidden' : 'visible';
+      $('#nextBtn').textContent = step === activeSteps.length - 1 ? 'Create my starter routine' : 'Continue';
+    }
+    function finishOnboarding() {
+      const hasMovementAdvice = requiresMovementAdvice(answers.goals, answers.goalDetails);
+      profile = {
+        version: 2,
+        goals: [...answers.goals],
+        primaryGoal: answers.goals[0],
+        goalDetails: { ...answers.goalDetails },
+        daysPerWeek: answers.daysPerWeek,
+        minutesPerStep: answers.minutesPerStep,
+        movementSetting: answers.movementSetting || '',
+        activitySafety: hasMovementAdvice ? (answers.activitySafety === 'clear' ? 'clear' : 'pause') : null
+      };
+      save();
+      updateHome();
+      show('routine');
+    }
+
+    function actionForGoal(goalId, currentProfile, duration) {
+      const detail = currentProfile.goalDetails[goalId];
+      const places = { home: 'at home with little or no equipment', outdoors: 'outdoors', gym: 'at a gym', group: 'in a group or class', unsure: 'in a setting that feels comfortable' };
+      const place = places[currentProfile.movementSetting] || 'in a setting that feels comfortable';
+      if (goalId === 'strength') {
+        return {
+          title: detail === 'gym' ? 'Set aside ' + duration + ' minutes for a familiar gym strength session' : 'Set aside ' + duration + ' minutes for comfortable strength activity',
+          sub: 'Choose familiar activities ' + place + ' or seek qualified instruction; this demo does not prescribe exercises.'
+        };
+      }
+      if (goalId === 'stamina') {
+        return {
+          title: 'Plan ' + duration + ' minutes of comfortable, steady movement',
+          sub: 'Choose an option ' + place + ' at a manageable pace. Stop if you feel unwell.'
+        };
+      }
+      if (goalId === 'energy') {
+        if (detail === 'sleep') return { title: 'Choose one steady wind-down cue', sub: 'For example, a regular time to pause before bed.' };
+        if (detail === 'move') return { title: 'Plan ' + duration + ' minutes of easy movement', sub: 'Choose an option ' + place + ' and adapt it to your week.' };
+        return { title: 'Pick one anchor for your daily rhythm', sub: 'Choose a small routine that makes the day feel more settled.' };
+      }
+      if (goalId === 'food') {
+        if (detail === 'regular') return { title: 'Choose one meal time to make easier', sub: 'Plan a simple option that fits your normal day.' };
+        if (detail === 'plan') return { title: 'Plan one meal for the next few days', sub: 'Keep the plan practical for your schedule.' };
+        if (detail === 'variety') return { title: 'Choose one new food or meal idea to try', sub: 'Use your own preferences; this demo does not give medical nutrition advice.' };
+        if (detail === 'cook') return { title: 'Pick one simple meal to prepare', sub: 'Choose something familiar and manageable.' };
+        return { title: 'Notice one eating routine you would like to make easier', sub: 'Start with a small, practical change.' };
+      }
+      if (goalId === 'routines') {
+        if (detail === 'sleep') return { title: 'Choose one steady wind-down cue', sub: 'Make it small enough to repeat on an ordinary evening.' };
+        if (detail === 'move') return { title: 'Plan ' + duration + ' minutes of comfortable movement', sub: 'Choose an option ' + place + ' and keep it manageable.' };
+        if (detail === 'meals') return { title: 'Plan one meal or shopping step', sub: 'Choose something that makes the week easier.' };
+        if (detail === 'pause') return { title: 'Add one short pause to a busy day', sub: 'Pick a time or cue that already exists in your routine.' };
+        return { title: 'Choose one routine to make a little easier', sub: 'Keep the first step simple and realistic.' };
+      }
+      if (goalId === 'habit') {
+        if (detail === 'smoking' || detail === 'alcohol') {
+          return { title: 'Find trusted specialist support for changing this habit', sub: 'This demo does not provide quitting, medication or alcohol-reduction plans. Ask a qualified support service what is appropriate for you.' };
+        }
+        return { title: 'Choose one small next step for a habit you want to change', sub: 'Keep it achievable, then review what helped at your check-in.' };
+      }
+      return { title: 'Choose one small step that supports your main goal', sub: 'Make it fit the time and energy you have this week.' };
+    }
+    function routineItems() {
+      if (!profile) {
+        return [{ id: 'starter', title: 'Take a gentle 10-minute walk', sub: 'A little fresh air, at your pace.' }];
+      }
+      if (profile.activitySafety === 'pause') {
+        return [{
+          id: 'safety-pause',
+          title: 'Get individual guidance before following an activity plan',
+          sub: 'This demo cannot assess health conditions or determine which activity is suitable for you.'
+        }];
+      }
+      const count = profile.daysPerWeek === 'varies' ? 2 : Number(profile.daysPerWeek || 2);
+      const minutesByChoice = { '5_10': 10, '11_20': 15, '21_30': 20, varies: 10 };
+      const duration = minutesByChoice[profile.minutesPerStep] || 10;
+      const goals = (profile.goals || []).length ? profile.goals : ['strength'];
+      const actions = goals.map(goalId => actionForGoal(goalId, profile, duration));
+      return Array.from({ length: Math.min(count, 5) }, (_, index) => ({
+        id: 'routine-v2-' + index,
+        title: actions[index % actions.length].title,
+        sub: index < actions.length ? actions[index % actions.length].sub : 'Repeat this step only if it still suits your week; make it smaller whenever you need.'
+      }));
+    }
+    function renderRoutine() {
+      const items = routineItems();
+      const count = profile ? (profile.daysPerWeek === 'varies' ? 2 : Number(profile.daysPerWeek || 2)) : 1;
+      const primary = profile ? goalLabels[profile.primaryGoal] : 'A gentle first step';
+      if (profile?.activitySafety === 'pause') {
+        $('#routineIntro').textContent = 'Movement suggestions are paused in this demo. Check with a qualified health professional about what is suitable before starting a new activity plan.';
+      } else {
+        $('#routineIntro').textContent = 'Main focus: ' + primary + '. A flexible starting rhythm of about ' + count +
+          ' day(s) a week, shaped around your answers. This is a demo, not medical or exercise advice.';
+      }
+      $('#routineList').innerHTML = items.map((item, index) =>
+        '<label class="routine ' + (done[item.id] ? 'checked' : '') + '"><input type="checkbox" data-id="' + item.id +
+        '" ' + (done[item.id] ? 'checked' : '') + '><span><strong>' +
+        ['A first step', 'A little more', 'Keep it easy', 'Find your rhythm', 'A moment for you'][index] +
+        '</strong><small>' + item.title + ' · ' + item.sub + '</small></span></label>'
+      ).join('');
+      $$('[data-id]').forEach(checkbox => checkbox.onchange = () => {
+        done[checkbox.dataset.id] = checkbox.checked;
+        save();
+        renderRoutine();
+        updateHome();
+      });
+    }
+    function updateHome() {
+      if (profile) {
+        const next = routineItems().find(item => !done[item.id]);
+        $('#hello').textContent = 'Welcome back to your space.';
+        $('#heroTitle').textContent = profile.activitySafety === 'pause' ? 'Your next step is getting the right guidance.' : 'Your routine is ready to flex.';
+        $('#heroText').textContent = profile.activitySafety === 'pause' ?
+          'The demo has held back on activity suggestions. Your safety comes first.' :
+          'Your starting point reflects what matters to you and the time you have. Take it one step at a time.';
+        $('#heroBtn').textContent = profile.activitySafety === 'pause' ? 'View my next step' : 'View my routine';
+        $('#nextTitle').textContent = next?.title || 'You’ve completed your steps';
+        $('#nextSub').textContent = next?.sub || 'Every small step adds up.';
+      }
+      const count = Object.values(done).filter(Boolean).length;
+      $('#doneCount').textContent = count;
+      $('#streakCount').textContent = Math.min(count, 7);
+      $('#checkinCount').textContent = checkins.length;
+      const date = new Date();
+      const mondayIndex = (date.getDay() + 6) % 7;
+      const names = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
+      $('#weekdays').innerHTML = names.map((name, index) =>
+        '<div class="day ' + (index === mondayIndex ? 'today' : '') + ' ' + (index < count ? 'done' : '') +
+        '"><b>' + name + '</b>' + (index < count ? '✓' : '·') + '</div>'
+      ).join('');
+    }
+
+    $$('.rating').forEach(group => {
+      const kind = group.dataset.rating;
+      group.innerHTML = [1, 2, 3, 4, 5].map(number =>
+        '<button type="button" data-n="' + number + '">' + number + '</button>'
+      ).join('');
+      group.onclick = event => {
+        if (event.target.dataset.n) {
+          $$('button', group).forEach(button => button.classList.toggle('sel', button === event.target));
+          const ratings = readLocal(keys[3], {});
+          ratings[kind] = Number(event.target.dataset.n);
+          localStorage.setItem(keys[3], JSON.stringify(ratings));
+        }
+      };
+    });
+    $('#saveCheckin').onclick = () => {
+      checkins.push({
+        date: new Date().toISOString(),
+        note: $('#note').value,
+        ratings: readLocal(keys[3], {})
+      });
+      save();
+      $('#note').value = '';
+      $('#checkinSuccess').classList.remove('hidden');
+      updateHome();
+      setTimeout(() => $('#checkinSuccess').classList.add('hidden'), 4000);
+    };
+    function toast(message) {
+      const element = document.createElement('div');
+      element.className = 'toast';
+      element.textContent = message;
+      document.body.append(element);
+      setTimeout(() => element.remove(), 2200);
+    }
+    $('#resetBtn').onclick = () => {
+      if (confirm('Clear this demo’s saved routine and check-ins from this browser?')) {
+        [...keys, ...previousKeys].forEach(key => localStorage.removeItem(key));
+        location.reload();
+      }
+    };
+    let installEvent;
+    window.addEventListener('beforeinstallprompt', event => {
+      event.preventDefault();
+      installEvent = event;
+      $('#installBtn').classList.add('show');
+    });
+    $('#installBtn').onclick = async () => {
+      if (installEvent) {
+        installEvent.prompt();
+        await installEvent.userChoice;
+        installEvent = null;
+        $('#installBtn').classList.remove('show');
+      } else {
+        toast('On iPhone: open the Share menu in Safari, then choose Add to Home Screen.');
+      }
+    };
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(() => {}));
+    }
+    updateHome();
   </script>
 </body></html>
