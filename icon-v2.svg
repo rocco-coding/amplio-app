@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="night" x1="72" y1="42" x2="438" y2="472" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#17345f"/>
+      <stop offset="1" stop-color="#0c1e3b"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0" cy="0" r="1" gradientTransform="matrix(0 200 -200 0 256 225)" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#3a74c8" stop-opacity=".42"/>
+      <stop offset="1" stop-color="#3a74c8" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="path" x1="172" y1="352" x2="341" y2="315" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#7de0cf"/>
+      <stop offset="1" stop-color="#b5f0df"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="112" fill="url(#night)"/>
+  <circle cx="256" cy="248" r="190" fill="url(#glow)"/>
+  <circle cx="256" cy="183" r="31" fill="#8de4d1"/>
+  <path d="M119 358c37-68 82-103 137-103s100 35 137 103" fill="none" stroke="#f4f8ff" stroke-linecap="round" stroke-width="25"/>
+  <path d="M173 374c24-39 52-59 83-59s59 20 83 59" fill="none" stroke="url(#path)" stroke-linecap="round" stroke-width="24"/>
+  <path d="M137 410h238" fill="none" stroke="#fff" stroke-linecap="round" stroke-opacity=".48" stroke-width="14"/>
+</svg>

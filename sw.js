@@ -3,7 +3,8 @@ const APP_SHELL = [
   './',
   './index.html',
   './manifest.webmanifest',
-  './icon.svg'
+  './icon.svg',
+  './icon-v2.svg'
 ];
 const APP_SCOPE = new URL(self.registration.scope);
 const STATIC_FILE = /\.(?:css|js|mjs|svg|png|jpe?g|webp|ico|woff2?|ttf|otf|webmanifest)$/i;
