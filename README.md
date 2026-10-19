@@ -1,4 +1,4 @@
-# amplio starter
+# Amplio starter
 
 This is a small installable web app prototype. It runs without an account or server database; questionnaire answers, routine ticks, and check-ins stay in this browser's local storage.
 
@@ -19,7 +19,7 @@ Open `index.html` in a browser to look at the interface. For the install prompt 
 The simplest no-monthly-fee route for this static demo is GitHub Pages. Its free plan supports Pages for public repositories. A public repository means the app's source files are visible, so this is suitable only while it contains demo-only behavior and no customer data.
 
 1. Sign in to GitHub and create a new **public** repository, for example `amplio-app`.
-2. Upload the app files from this folder (`index.html`, `manifest.webmanifest`, `sw.js`, `icon.svg`, and `icon-v2.svg`).
+2. Upload the app files from this folder (`index.html`, `manifest.webmanifest`, `sw.js`, and all four `icon-v3` files).
 3. In the repository, open **Settings → Pages**. Under **Build and deployment**, choose **Deploy from a branch**, select `main` and `/ (root)`, then save.
 4. Wait for GitHub Pages to publish the site. The address will look like `https://YOUR-USERNAME.github.io/amplio-app/`.
 5. On iPhone, open that address in Safari, tap **Share → Add to Home Screen**, turn on **Open as Web App** if shown, and tap **Add**. On Android, open the address in Chrome and choose **Install app** or **Add to Home screen** from the browser menu.
@@ -30,7 +30,7 @@ GitHub's current setup guide: https://docs.github.com/en/pages/quickstart
 
 The app checks for a newer release when it opens online and uses the latest page and app files from the website. People do not need to reinstall it. If an app is already open during a release, it will use the update the next time it opens or reloads online. When offline, it uses the last version saved on that device. The service worker only caches app pages and static files; it does not cache API responses or user data.
 
-The phone's home-screen icon is managed separately by iOS or Android. amplio uses a versioned icon URL so devices can notice a changed logo, but an operating system may still keep an icon already saved to the home screen; in that case, the person may need to remove and add the shortcut again. App content updates do not require this.
+The phone's home-screen icon and display name are managed separately by iOS or Android. Amplio uses versioned icon files and declares an iPhone home-screen icon and title, so devices can notice the new branding. An operating system may still keep an existing shortcut's saved name or icon; if that happens, remove and add the shortcut again. App content updates do not require this.
 
 ## Before inviting real customers
 

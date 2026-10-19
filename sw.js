@@ -1,10 +1,12 @@
-const CACHE_NAME = 'amplio-app-shell-v2';
+const CACHE_NAME = 'amplio-app-shell-v3';
 const APP_SHELL = [
   './',
   './index.html',
   './manifest.webmanifest',
-  './icon.svg',
-  './icon-v2.svg'
+  './icon-v3.svg',
+  './icon-v3-180.png',
+  './icon-v3-192.png',
+  './icon-v3-512.png'
 ];
 const APP_SCOPE = new URL(self.registration.scope);
 const STATIC_FILE = /\.(?:css|js|mjs|svg|png|jpe?g|webp|ico|woff2?|ttf|otf|webmanifest)$/i;
