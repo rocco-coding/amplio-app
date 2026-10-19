@@ -26,6 +26,12 @@ The simplest no-monthly-fee route for this static demo is GitHub Pages. Its free
 
 GitHub's current setup guide: https://docs.github.com/en/pages/quickstart
 
+## Updates after installation
+
+The app checks for a newer release when it opens online and uses the latest page and app files from the website. People do not need to reinstall it. If an app is already open during a release, it will use the update the next time it opens or reloads online. When offline, it uses the last version saved on that device. The service worker only caches app pages and static files; it does not cache API responses or user data.
+
+The phone's home-screen icon is managed separately by iOS or Android. A new icon may not replace an icon already saved to the home screen automatically; in that case, the person may need to remove and add the shortcut again. App content updates do not require this.
+
 ## Before inviting real customers
 
 This prototype has no login, coach inbox, server-side storage, access controls, privacy notice, or health/safety review. Do not use it to collect real customers' personal or health information. Those pieces need to be designed and secured before handling customer data.
