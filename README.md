@@ -1,4 +1,4 @@
-# Amplio starter
+# Arclora app prototype
 
 This is a small installable web app prototype. It runs without an account or server database; questionnaire answers, routine ticks, and check-ins stay in this browser's local storage.
 
@@ -30,7 +30,7 @@ GitHub's current setup guide: https://docs.github.com/en/pages/quickstart
 
 The app checks for a newer release when it opens online and uses the latest page and app files from the website. People do not need to reinstall it. If an app is already open during a release, it will use the update the next time it opens or reloads online. When offline, it uses the last version saved on that device. The service worker only caches app pages and static files; it does not cache API responses or user data.
 
-The phone's home-screen icon and display name are managed separately by iOS or Android. Amplio uses versioned icon files and declares an iPhone home-screen icon and title, so devices can notice the new branding. An operating system may still keep an existing shortcut's saved name or icon; if that happens, remove and add the shortcut again. App content updates do not require this.
+The phone's home-screen icon and display name are managed separately by iOS or Android. Arclora uses versioned icon files and declares an iPhone home-screen icon and title, so devices can notice the new branding. An operating system may still keep an existing shortcut's saved name or icon; if that happens, remove and add the shortcut again. App content updates do not require this.
 
 ## Before inviting real customers
 
