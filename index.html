@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="theme-color" content="#102346"><meta name="description" content="Small, sustainable wellbeing steps that fit your life.">
+  <meta name="theme-color" content="#102346"><meta name="description" content="Small, sustainable wellbeing actions that fit your life.">
   <meta name="apple-mobile-web-app-title" content="Arclora">
   <link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icon-v3.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="icon-v3-180.png">
   <title>Arclora — Progress, on your terms</title>
@@ -53,20 +53,38 @@
     }
     @media(prefers-reduced-motion:reduce){.card,.nav button{transition:none}.card:hover{transform:none}}
   </style>
+  <style>
+    .routine-list{grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));align-items:stretch}
+    .plan-card{background:#fff;border:1px solid var(--line);border-radius:17px;padding:19px;box-shadow:0 6px 22px #10234608;display:flex;flex-direction:column;gap:10px}
+    .plan-card.selected{border-color:#7fa6f4;box-shadow:0 0 0 3px #eaf2ff}
+    .plan-card h3{margin:1px 0 0;color:var(--navy);font-size:17px;letter-spacing:-.02em}
+    .plan-card-top{display:flex;align-items:center;justify-content:space-between;gap:8px}
+    .plan-choice-label{font-size:11px;font-weight:700;color:#426185;text-transform:uppercase;letter-spacing:.06em}
+    .plan-badge{font-size:9px;font-weight:750;letter-spacing:.04em;color:#59708f;background:#eef3fa;border-radius:999px;padding:5px 8px}
+    .plan-description,.plan-note,.plan-time,.plan-match{font-size:12px;line-height:1.45;margin:0;color:#66768c}
+    .plan-match{color:#315a9c;font-weight:650}
+    .plan-note{padding:10px 11px;background:#f7f9fc;border-radius:10px}
+    .plan-time{font-size:11px}
+    .plan-card .btn{margin-top:auto;align-self:flex-start}
+    .safety-alert{margin-top:14px;padding:14px 16px;border:1px solid #f2d28c;background:#fff8e8;border-radius:13px;color:#614b20;font-size:13px}
+    .safety-alert strong{display:block;margin-bottom:3px;color:#49370f}
+    .plan-empty{padding:18px;background:#f7f9fc;border:1px dashed #cbd6e5;border-radius:14px;color:#617187;font-size:13px}
+    @media(max-width:520px){.plan-card{padding:16px}.plan-card .btn{width:100%}}
+  </style>
 </head>
 <body><div class="app">
   <header class="topbar"><div class="brand"><img class="brand-mark" src="icon-v3.svg" alt=""><span class="brand-name">Arclora</span><span class="tagline">Progress, on your terms</span></div><div class="top-actions"><button class="quiet install" id="installBtn">＋ Install app</button><button class="quiet" id="resetBtn">Reset demo</button></div></header>
-  <div class="layout"><aside><nav class="nav" aria-label="Main navigation"><button class="active" data-view="home"><span>⌂</span>Today</button><button data-view="routine"><span>◷</span>My routine</button><button data-view="checkin"><span>↗</span>Check-in</button><button data-view="about"><span>ⓘ</span>About</button></nav><div class="aside-note"><strong>A little is still progress.</strong>Your plan can change whenever life does.</div></aside>
+  <div class="layout"><aside><nav class="nav" aria-label="Main navigation"><button class="active" data-view="home"><span>⌂</span>Today</button><button data-view="routine"><span>◷</span>Plan choices</button><button data-view="checkin"><span>↗</span>Check-in</button><button data-view="about"><span>ⓘ</span>About</button></nav><div class="aside-note"><strong>A little is still progress.</strong>Your plan can change whenever life does.</div></aside>
   <main class="main">
-    <section class="view active" id="home"><div class="eyebrow" id="greeting">YOUR SPACE</div><h1 class="heading" id="hello">A fresh start, at your pace.</h1><p class="subheading">Small steps count. Let’s make today feel a little better.</p>
-      <div class="hero"><div><div class="eyebrow" style="color:#a9c8ff">YOUR WEEK, YOUR WAY</div><h2 id="heroTitle">Start with what feels doable.</h2><p id="heroText">A few thoughtful steps can make a real difference. Your routine is here when you’re ready.</p><button class="btn" style="margin-top:18px" id="heroBtn">Build my starter routine</button></div><div class="hero-art" aria-hidden="true"><svg viewBox="0 0 300 220" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="sunrise" x1="106" y1="43" x2="190" y2="123" gradientUnits="userSpaceOnUse"><stop stop-color="#b4f1df"/><stop offset="1" stop-color="#63c8c9"/></linearGradient></defs><circle cx="150" cy="78" r="39" fill="url(#sunrise)"/><circle cx="150" cy="78" r="56" stroke="#dcecff" stroke-opacity=".18" stroke-width="2"/><path d="M20 174c35-49 78-74 130-74s95 25 130 74" stroke="#eef5ff" stroke-linecap="round" stroke-width="8"/><path d="M64 183c24-32 52-48 86-48s62 16 86 48" stroke="#80e1d1" stroke-linecap="round" stroke-width="7"/><path d="M46 195h208" stroke="#fff" stroke-linecap="round" stroke-opacity=".48" stroke-width="5"/></svg></div></div>
-      <div class="grid"><article class="card"><h3>This week</h3><p class="muted">Showing up in ways that work for you.</p><div class="weekdays" id="weekdays"></div><div class="statrow"><div class="stat"><b id="doneCount">0</b><span>steps completed</span></div><div class="stat"><b id="streakCount">0</b><span>steady days</span></div><div class="stat"><b id="checkinCount">0</b><span>check-ins</span></div></div></article><article class="card"><h3>Next small step</h3><p class="muted">No pressure. Pick something that fits today.</p><div class="activity"><div class="activity-icon">☀</div><div><strong id="nextTitle">Take a gentle 10-minute walk</strong><small id="nextSub">A little fresh air, at your pace</small></div></div><button class="btn secondary block" id="routineBtn">See my routine</button></article></div>
-      <div class="card week"><h3>A note from Arclora</h3><p class="muted">Your routine should fit around your life. If today gets busy, that’s useful information—we can make the next step smaller.</p></div>
+    <section class="view active" id="home"><div class="eyebrow" id="greeting">YOUR SPACE</div><h1 class="heading" id="hello">A fresh start, at your pace.</h1><p class="subheading">Small actions count. Let’s make today feel a little better.</p>
+      <div class="hero"><div><div class="eyebrow" style="color:#a9c8ff">YOUR WEEK, YOUR WAY</div><h2 id="heroTitle">Start with what feels doable.</h2><p id="heroText">Your answers can help you choose a plan that feels right for you.</p><button class="btn" style="margin-top:18px" id="heroBtn">Build my plan choices</button></div><div class="hero-art" aria-hidden="true"><svg viewBox="0 0 300 220" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="sunrise" x1="106" y1="43" x2="190" y2="123" gradientUnits="userSpaceOnUse"><stop stop-color="#b4f1df"/><stop offset="1" stop-color="#63c8c9"/></linearGradient></defs><circle cx="150" cy="78" r="39" fill="url(#sunrise)"/><circle cx="150" cy="78" r="56" stroke="#dcecff" stroke-opacity=".18" stroke-width="2"/><path d="M20 174c35-49 78-74 130-74s95 25 130 74" stroke="#eef5ff" stroke-linecap="round" stroke-width="8"/><path d="M64 183c24-32 52-48 86-48s62 16 86 48" stroke="#80e1d1" stroke-linecap="round" stroke-width="7"/><path d="M46 195h208" stroke="#fff" stroke-linecap="round" stroke-opacity=".48" stroke-width="5"/></svg></div></div>
+      <div class="grid"><article class="card"><h3>This week</h3><p class="muted">Showing up in ways that work for you.</p><div class="weekdays" id="weekdays"></div><div class="statrow"><div class="stat"><b id="doneCount">0</b><span>actions completed</span></div><div class="stat"><b id="streakCount">0</b><span>steady days</span></div><div class="stat"><b id="checkinCount">0</b><span>check-ins</span></div></div></article><article class="card"><h3>Your next action</h3><p class="muted">No pressure. Pick something that fits today.</p><div class="activity"><div class="activity-icon">☀</div><div><strong id="nextTitle">Answer a few questions</strong><small id="nextSub">See the plan options matched to your answers.</small></div></div><button class="btn secondary block" id="routineBtn">See plan choices</button></article></div>
+      <div class="card week"><h3>A note from Arclora</h3><p class="muted">Your routine should fit around your life. If today gets busy, that’s useful information—we can make your next action smaller.</p></div>
     </section>
-    <section class="view" id="onboarding"><div class="eyebrow">A GOOD PLACE TO BEGIN</div><h1 class="heading">Let’s find your starting point.</h1><p class="subheading">A few focused questions help Arclora understand what matters to you and what fits your week.</p><div class="form-card"><div style="display:flex;justify-content:space-between;color:var(--muted);font-size:12px"><span id="stepLabel">Question 1</span><span>About 2–3 minutes</span></div><div class="progress"><i id="progressBar" style="width:10%"></i></div><div id="questionArea" aria-live="polite"></div><div class="form-footer"><button type="button" class="btn secondary" id="backBtn">Back</button><button type="button" class="btn" id="nextBtn">Continue</button></div><p class="notice">Prototype only: answers, including your general safety choice, stay in this browser on this device. Don’t enter real health or customer information. This app does not assess health risks or give medical advice.</p><p class="notice">No payment is taken in this demo. Any future paid membership should show its full recurring price before the detailed questionnaire begins.</p></div></section>
-    <section class="view" id="routine"><div class="eyebrow">YOUR PERSONAL STARTER ROUTINE</div><h1 class="heading">A plan that can flex.</h1><p class="subheading">A small starting rhythm shaped around your priorities and available time. Change or skip any step whenever you need.</p><div class="card"><h3>This week’s gentle focus</h3><p class="muted" id="routineIntro">A few achievable steps, with room for real life.</p><div class="routine-list" id="routineList"></div><div id="routineSaved" class="notice">Your ticks are saved on this device.</div></div><button class="btn" style="margin-top:16px" data-goto="checkin">How did this week feel?</button></section>
-    <section class="view" id="checkin"><div class="eyebrow">A QUICK WEEKLY PAUSE</div><h1 class="heading">How has this week felt?</h1><p class="subheading">Your answers help shape what comes next. Keep it simple and honest.</p><div class="form-card"><div class="check-grid"><div class="check-row"><strong>How manageable did your routine feel?</strong><div class="rating" data-rating="manage"></div></div><div class="check-row"><strong>How was your energy this week?</strong><div class="rating" data-rating="energy"></div></div><div class="check-row"><strong>How much did you enjoy your movement?</strong><div class="rating" data-rating="enjoy"></div></div></div><label for="note" style="font-size:13px;font-weight:650;color:var(--navy)">Anything you’d like to change?</label><textarea id="note" rows="3" placeholder="For example: shorter sessions would suit me better"></textarea><button class="btn block" id="saveCheckin">Save this check-in</button><div id="checkinSuccess" class="success hidden">Saved on this device. Thanks for checking in with yourself.</div><p class="notice">Demo only. Check-ins are not sent to a coach or stored on a server.</p></div></section>
-    <section class="view" id="about"><div class="eyebrow">HELLO, WE’RE ARCLORA</div><h1 class="heading">Progress, on your terms.</h1><p class="subheading">Wellbeing that starts with your real life, and adapts as it changes.</p><div class="grid"><article class="card"><h3>Small steps matter</h3><p class="muted">You don’t need a perfect routine to make progress. Choose changes that feel possible, and build from there.</p></article><article class="card"><h3>Life is allowed to change</h3><p class="muted">Busy week? Different priorities? Your plan can flex. Adjusting it is part of the process.</p></article></div><div class="card week"><h3>What this demo is</h3><p class="muted">A local, installable app prototype to explore the experience. It has no account system, coach inbox, secure database, or health guidance. Your demo answers are saved only in this browser.</p></div><button class="btn secondary" style="margin-top:17px" data-goto="onboarding">Set up my routine</button></section>
+    <section class="view" id="onboarding"><div class="eyebrow">A GOOD PLACE TO BEGIN</div><h1 class="heading">Let’s find your starting point.</h1><p class="subheading">A few focused questions help Arclora understand what matters to you and what fits your week.</p><div class="form-card"><div style="display:flex;justify-content:space-between;color:var(--muted);font-size:12px"><span id="stepLabel">Question 1</span><span>About 2–3 minutes</span></div><div class="progress"><i id="progressBar" style="width:10%"></i></div><div id="questionArea" aria-live="polite"></div><div class="form-footer"><button type="button" class="btn secondary" id="backBtn">Back</button><button type="button" class="btn" id="nextBtn">Continue</button></div><p class="notice">Prototype only: answers, including your general safety choice, stay in this browser on this device. Don’t enter real health or customer information. This app does not assess health risks or give medical advice.</p><p class="notice">This version is designed for adults aged 18+. No payment is taken in this demo. Any future paid membership should show its full recurring price before the detailed questionnaire begins.</p></div></section>
+    <section class="view" id="routine"><div class="eyebrow">MATCHED TO YOUR ANSWERS</div><h1 class="heading">Choose the plan that feels right.</h1><p class="subheading">Arclora has matched a few starting options to your goals and preferences. Full plan actions will be added later.</p><div class="card"><h3>Your plan choices</h3><p class="muted" id="routineIntro">Complete the questionnaire to see your matched plan choices.</p><div id="routineSafety"></div><div class="routine-list" id="routineList"></div><div id="routineSaved" class="notice">Your plan choice will be saved on this device.</div></div><button class="btn secondary" style="margin-top:16px" data-goto="onboarding">Update my answers</button></section>
+    <section class="view" id="checkin"><div class="eyebrow">A QUICK WEEKLY PAUSE</div><h1 class="heading">How has this week felt?</h1><p class="subheading">Your answers help shape what comes next. Keep it simple and honest.</p><div class="form-card"><div class="check-grid"><div class="check-row"><strong>How manageable did your routine feel?</strong><div class="rating" data-rating="manage"></div></div><div class="check-row"><strong>How was your energy this week?</strong><div class="rating" data-rating="energy"></div></div><div class="check-row"><strong>How much did you enjoy your chosen actions?</strong><div class="rating" data-rating="enjoy"></div></div></div><label for="note" style="font-size:13px;font-weight:650;color:var(--navy)">Anything you’d like to change?</label><textarea id="note" rows="3" placeholder="For example: shorter sessions would suit me better"></textarea><button class="btn block" id="saveCheckin">Save this check-in</button><div id="checkinSuccess" class="success hidden">Saved on this device. Thanks for checking in with yourself.</div><p class="notice">Demo only. Check-ins are not sent to a coach or stored on a server.</p></div></section>
+    <section class="view" id="about"><div class="eyebrow">HELLO, WE’RE ARCLORA</div><h1 class="heading">Progress, on your terms.</h1><p class="subheading">Wellbeing that starts with your real life, and adapts as it changes.</p><div class="grid"><article class="card"><h3>Small actions matter</h3><p class="muted">You don’t need a perfect routine to make progress. Choose actions that feel possible, and build from there.</p></article><article class="card"><h3>Life is allowed to change</h3><p class="muted">Busy week? Different priorities? Your plan can flex. Adjusting it is part of the process.</p></article></div><div class="card week"><h3>What this demo is</h3><p class="muted">A local, installable app prototype to explore the experience. It has no account system, coach inbox, secure database, or health guidance. Your demo answers are saved only in this browser.</p></div><button class="btn secondary" style="margin-top:17px" data-goto="onboarding">Set up my routine</button></section>
   </main></div></div>
   <script>
     const keys = ['amplio_profile_v2', 'amplio_done_v2', 'amplio_checkins_v2', 'amplio_ratings_v2'];
@@ -130,7 +148,7 @@
           { id: 'plan', label: 'Plan meals ahead', detail: 'Make day-to-day choices easier.' },
           { id: 'variety', label: 'Add more variety', detail: 'Explore simple ways to vary what I eat.' },
           { id: 'cook', label: 'Feel more confident preparing food', detail: 'Build a simple cooking routine.' },
-          { id: 'unsure', label: 'I’m not sure yet', detail: 'Help me start with one small step.' }
+          { id: 'unsure', label: 'I’m not sure yet', detail: 'Help me start with one small action.' }
         ]
       },
       routines: {
@@ -141,7 +159,7 @@
           { id: 'move', label: 'Everyday movement', detail: 'Find small opportunities to move more.' },
           { id: 'meals', label: 'Meal planning', detail: 'Make regular meals easier to fit into my week.' },
           { id: 'pause', label: 'Make space to pause', detail: 'Build a small break into a busy day.' },
-          { id: 'unsure', label: 'I’m not sure yet', detail: 'Help me choose a manageable first step.' }
+          { id: 'unsure', label: 'I’m not sure yet', detail: 'Help me choose a manageable first action.' }
         ]
       },
       habit: {
@@ -150,7 +168,7 @@
         options: [
           { id: 'smoking', label: 'Smoking or nicotine', detail: 'Help me find a suitable support route.' },
           { id: 'alcohol', label: 'Alcohol', detail: 'Help me find a suitable support route.' },
-          { id: 'other', label: 'Another habit', detail: 'Help me decide on one small next step.' },
+          { id: 'other', label: 'Another habit', detail: 'Help me decide on one small next action.' },
           { id: 'unsure', label: 'I’m not sure yet', detail: 'I’d like to explore my options.' }
         ]
       }
@@ -181,26 +199,26 @@
       questions.push({
         id: 'daysPerWeek',
         type: 'single',
-        title: 'How often could you realistically make time for a small step?',
+        title: 'How often could you realistically make time for an action?',
         hint: 'Think about a normal week, not your busiest or best week.',
         options: [
           { id: '1', label: 'About once a week', detail: 'A gentle place to begin.' },
           { id: '2', label: 'About twice a week', detail: 'A couple of planned moments.' },
           { id: '3', label: 'About three times a week', detail: 'A steady rhythm, with room for rest.' },
-          { id: '4', label: 'Four or more times a week', detail: 'Short steps can be spread across the week.' },
+          { id: '4', label: 'Four or more times a week', detail: 'Short actions can be spread across the week.' },
           { id: 'varies', label: 'It changes from week to week', detail: 'We can keep the plan flexible.' }
         ]
       });
       questions.push({
         id: 'minutesPerStep',
         type: 'single',
-        title: 'How much time can a planned step usually take?',
+        title: 'How much time can a planned action usually take?',
         hint: 'This is a guide, not a commitment.',
         options: [
           { id: '5_10', label: 'About 5–10 minutes', detail: 'Keep it very manageable.' },
           { id: '11_20', label: 'About 11–20 minutes', detail: 'A little more room when it suits me.' },
           { id: '21_30', label: 'About 21–30 minutes', detail: 'I can sometimes make space for longer.' },
-          { id: 'varies', label: 'It varies', detail: 'Keep the steps adaptable.' }
+          { id: 'varies', label: 'It varies', detail: 'Keep the actions adaptable.' }
         ]
       });
       if (requiresMovementAdvice(answers.goals, answers.goalDetails)) {
@@ -319,7 +337,7 @@
         renderQuestion();
       });
       $('#backBtn').style.visibility = step === 0 ? 'hidden' : 'visible';
-      $('#nextBtn').textContent = step === activeSteps.length - 1 ? 'Create my starter routine' : 'Continue';
+      $('#nextBtn').textContent = step === activeSteps.length - 1 ? 'Show my plan choices' : 'Continue';
     }
     function finishOnboarding() {
       const hasMovementAdvice = requiresMovementAdvice(answers.goals, answers.goalDetails);
@@ -338,118 +356,147 @@
       show('routine');
     }
 
-    function actionForGoal(goalId, currentProfile, duration) {
-      const detail = currentProfile.goalDetails[goalId];
-      const places = { home: 'at home with little or no equipment', outdoors: 'outdoors', gym: 'at a gym', group: 'in a group or class', unsure: 'in a setting that feels comfortable' };
-      const place = places[currentProfile.movementSetting] || 'in a setting that feels comfortable';
-      if (goalId === 'strength') {
-        return {
-          title: detail === 'gym' ? 'Set aside ' + duration + ' minutes for a familiar gym strength session' : 'Set aside ' + duration + ' minutes for comfortable strength activity',
-          sub: 'Choose familiar activities ' + place + ' or seek qualified instruction; this demo does not prescribe exercises.'
-        };
-      }
-      if (goalId === 'stamina') {
-        return {
-          title: 'Plan ' + duration + ' minutes of comfortable, steady movement',
-          sub: 'Choose an option ' + place + ' at a manageable pace. Stop if you feel unwell.'
-        };
-      }
-      if (goalId === 'energy') {
-        if (detail === 'sleep') return { title: 'Choose one steady wind-down cue', sub: 'For example, a regular time to pause before bed.' };
-        if (detail === 'move') return { title: 'Plan ' + duration + ' minutes of easy movement', sub: 'Choose an option ' + place + ' and adapt it to your week.' };
-        return { title: 'Pick one anchor for your daily rhythm', sub: 'Choose a small routine that makes the day feel more settled.' };
-      }
-      if (goalId === 'food') {
-        if (detail === 'regular') return { title: 'Choose one meal time to make easier', sub: 'Plan a simple option that fits your normal day.' };
-        if (detail === 'plan') return { title: 'Plan one meal for the next few days', sub: 'Keep the plan practical for your schedule.' };
-        if (detail === 'variety') return { title: 'Choose one new food or meal idea to try', sub: 'Use your own preferences; this demo does not give medical nutrition advice.' };
-        if (detail === 'cook') return { title: 'Pick one simple meal to prepare', sub: 'Choose something familiar and manageable.' };
-        return { title: 'Notice one eating routine you would like to make easier', sub: 'Start with a small, practical change.' };
-      }
-      if (goalId === 'routines') {
-        if (detail === 'sleep') return { title: 'Choose one steady wind-down cue', sub: 'Make it small enough to repeat on an ordinary evening.' };
-        if (detail === 'move') return { title: 'Plan ' + duration + ' minutes of comfortable movement', sub: 'Choose an option ' + place + ' and keep it manageable.' };
-        if (detail === 'meals') return { title: 'Plan one meal or shopping step', sub: 'Choose something that makes the week easier.' };
-        if (detail === 'pause') return { title: 'Add one short pause to a busy day', sub: 'Pick a time or cue that already exists in your routine.' };
-        return { title: 'Choose one routine to make a little easier', sub: 'Keep the first step simple and realistic.' };
-      }
-      if (goalId === 'habit') {
-        if (detail === 'smoking' || detail === 'alcohol') {
-          return { title: 'Find trusted specialist support for changing this habit', sub: 'This demo does not provide quitting, medication or alcohol-reduction plans. Ask a qualified support service what is appropriate for you.' };
-        }
-        return { title: 'Choose one small next step for a habit you want to change', sub: 'Keep it achievable, then review what helped at your check-in.' };
-      }
-      return { title: 'Choose one small step that supports your main goal', sub: 'Make it fit the time and energy you have this week.' };
+    const planCatalogue = [
+      { id: 'STR-01', goal: 'strength', title: 'Everyday strength choices', summary: 'A small menu of strength options linked to everyday tasks.', movement: true, settings: ['home', 'outdoors', 'gym', 'group'], note: 'No exercises or progressions have been added yet. Movement content needs qualified review.' },
+      { id: 'STR-02', goal: 'strength', title: 'Home strength starter', summary: 'A home-based strength option designed to keep setup simple.', movement: true, settings: ['home'], note: 'No exercises or equipment assumptions have been added yet. Movement content needs qualified review.' },
+      { id: 'STR-03', goal: 'strength', title: 'Gym confidence', summary: 'A plan concept for becoming familiar with a gym strength session.', movement: true, settings: ['gym'], note: 'No exercises, loads or progressions have been added yet. Movement content needs qualified review.' },
+      { id: 'STR-04', goal: 'strength', title: 'Strength for an activity', summary: 'A general strength option connected to activities the user enjoys.', movement: true, settings: ['home', 'outdoors', 'gym', 'group'], note: 'No exercises have been added yet. Sport-specific content would need more detail and qualified review.' },
+      { id: 'STA-01', goal: 'stamina', title: 'Everyday movement confidence', summary: 'A flexible movement option for ordinary activities such as walking.', movement: true, settings: ['home', 'outdoors', 'group'], note: 'No activity schedule has been added yet. Movement content needs qualified review.' },
+      { id: 'STA-02', goal: 'stamina', title: 'Steady outdoor activity', summary: 'A flexible outdoor option for someone who wants to keep moving for longer.', movement: true, settings: ['outdoors'], note: 'No activity schedule has been added yet. Any longer programme must be checked against your chosen time.' },
+      { id: 'STA-03', goal: 'stamina', title: 'Movement variety', summary: 'A choice-led way to explore familiar movement options.', movement: true, settings: ['home', 'outdoors', 'gym', 'group'], note: 'No intervals, sprints or intensity targets are included. Movement content needs qualified review.' },
+      { id: 'STA-04', goal: 'stamina', title: 'Stamina sampler', summary: 'A short list of familiar activities to help you choose what you like.', movement: true, settings: ['home', 'outdoors', 'gym', 'group'], note: 'No activities have been added yet. Movement content needs qualified review.' },
+      { id: 'EN-01', goal: 'energy', title: 'Wind-down cue', summary: 'A small routine prompt to mark the end of the day.', movement: false, settings: null, note: 'This is a routine idea, not advice or treatment for a sleep problem.' },
+      { id: 'EN-02', goal: 'energy', title: 'Daily rhythm anchor', summary: 'Connect one manageable action to a point in your day.', movement: false, settings: null, note: 'No action prompts have been added yet.' },
+      { id: 'EN-03', goal: 'energy', title: 'Gentle movement habit', summary: 'A small movement option that can flex with your week.', movement: true, settings: ['home', 'outdoors', 'gym', 'group'], note: 'No activity has been added yet. Movement content needs qualified review.' },
+      { id: 'FOOD-01', goal: 'food', title: 'Make one meal easier', summary: 'Choose one food or preparation action that makes a normal day easier.', movement: false, settings: null, note: 'No meal advice or medical nutrition guidance is included.' },
+      { id: 'FOOD-02', goal: 'food', title: 'Simple meal shortlist', summary: 'Create a short list of familiar meal ideas for the next few days.', movement: false, settings: null, note: 'No meal advice or medical nutrition guidance is included.' },
+      { id: 'FOOD-03', goal: 'food', title: 'Plan one meal', summary: 'Choose one meal to plan in advance, with an optional variation.', movement: false, settings: null, note: 'No meal advice or medical nutrition guidance is included.' },
+      { id: 'FOOD-04', goal: 'food', title: 'Try a familiar variation', summary: 'Explore one food or meal variation that suits your preferences.', movement: false, settings: null, note: 'No meal advice or medical nutrition guidance is included.' },
+      { id: 'FOOD-05', goal: 'food', title: 'One simple preparation skill', summary: 'Choose a basic food preparation action you would like to practise.', movement: false, settings: null, note: 'No recipes or food-safety instructions have been added yet.' },
+      { id: 'FOOD-06', goal: 'food', title: 'Meal rhythm reminder', summary: 'Choose a flexible cue for a meal routine, with reminders under your control.', movement: false, settings: null, note: 'No reminders are sent by this demo. Any future reminder must be optional and easy to pause.' },
+      { id: 'WELL-01', goal: 'routines', title: 'Pause in the day', summary: 'Attach a brief pause to a cue that already exists in your day.', movement: false, settings: null, note: 'No reflection prompts have been added yet.' },
+      { id: 'HAB-01', goal: 'habit', title: 'One small habit reflection', summary: 'A general reflection concept for a low-risk habit change.', movement: false, settings: null, note: 'This placeholder does not cover substance use, eating disorders, self-harm or other high-risk needs.' },
+      { id: 'SUP-NIC', goal: 'habit', title: 'Find nicotine support', summary: 'A signpost to an appropriate specialist support service.', movement: false, settings: null, support: true, note: 'A verified local support link will be added after Arclora’s launch region is confirmed. This demo does not provide quitting or medication advice.' },
+      { id: 'SUP-ALC', goal: 'habit', title: 'Find alcohol support', summary: 'A signpost to a trusted specialist service for alcohol support.', movement: false, settings: null, support: true, note: 'A verified local support link will be added after Arclora’s launch region is confirmed. This demo does not provide reduction, detox or withdrawal advice.' },
+    ];
+
+    const planMatchMap = {
+      strength: { daily: ['STR-02', 'STR-01'], gym: ['STR-03', 'STR-01'], sport: ['STR-04', 'STR-01'], unsure: ['STR-01', 'STR-02'] },
+      stamina: { daily: ['STA-01'], longer: ['STA-02'], bursts: ['STA-03'], unsure: ['STA-04'] },
+      energy: { sleep: ['EN-01'], move: ['EN-03'], day: ['EN-02'], unsure: ['EN-02'] },
+      food: { regular: ['FOOD-01', 'FOOD-06'], plan: ['FOOD-02', 'FOOD-03'], variety: ['FOOD-03', 'FOOD-04'], cook: ['FOOD-05'], unsure: ['FOOD-01'] },
+      routines: { sleep: ['EN-01', 'EN-02'], move: ['EN-03'], meals: ['FOOD-01', 'FOOD-02'], pause: ['WELL-01'], unsure: ['EN-02', 'WELL-01'] },
+      habit: { smoking: ['SUP-NIC'], alcohol: ['SUP-ALC'], other: ['HAB-01'], unsure: ['HAB-01'] },
+    };
+
+    const goalDetailLabels = {
+      strength: { daily: 'everyday tasks', gym: 'gym or weights', sport: 'sport or general strength', unsure: 'general strength' },
+      stamina: { daily: 'day-to-day comfort', longer: 'longer activity', bursts: 'short bursts', unsure: 'general stamina' },
+      energy: { sleep: 'sleep or winding down', move: 'more movement', day: 'daily rhythm', unsure: 'a starting point' },
+      food: { regular: 'regular meal times', plan: 'planning meals', variety: 'more variety', cook: 'food preparation', unsure: 'a practical starting point' },
+      routines: { sleep: 'sleep or winding down', move: 'everyday movement', meals: 'meal planning', pause: 'making space to pause', unsure: 'a daily routine' },
+      habit: { smoking: 'smoking or nicotine support', alcohol: 'alcohol support', other: 'a general habit', unsure: 'habit support' },
+    };
+
+    function matchesSetting(plan, setting) {
+      if (!plan.movement || !plan.settings) return true;
+      if (!setting || setting === 'unsure') return plan.settings.length > 1;
+      return plan.settings.includes(setting);
     }
-    function routineItems() {
-      if (!profile) {
-        return [{ id: 'starter', title: 'Take a gentle 10-minute walk', sub: 'A little fresh air, at your pace.' }];
-      }
-      if (profile.activitySafety === 'pause') {
-        return [{
-          id: 'safety-pause',
-          title: 'Get individual guidance before following an activity plan',
-          sub: 'This demo cannot assess health conditions or determine which activity is suitable for you.'
-        }];
-      }
-      const count = profile.daysPerWeek === 'varies' ? 2 : Number(profile.daysPerWeek || 2);
-      const minutesByChoice = { '5_10': 10, '11_20': 15, '21_30': 20, varies: 10 };
-      const duration = minutesByChoice[profile.minutesPerStep] || 10;
-      const goals = (profile.goals || []).length ? profile.goals : ['strength'];
-      const actions = goals.map(goalId => actionForGoal(goalId, profile, duration));
-      return Array.from({ length: Math.min(count, 5) }, (_, index) => ({
-        id: 'routine-v2-' + index,
-        title: actions[index % actions.length].title,
-        sub: index < actions.length ? actions[index % actions.length].sub : 'Repeat this step only if it still suits your week; make it smaller whenever you need.'
-      }));
+    function getPlanChoices(currentProfile) {
+      if (!currentProfile || !Array.isArray(currentProfile.goals)) return [];
+      const choices = [];
+      const details = currentProfile.goalDetails || {};
+      const movementPaused = requiresMovementAdvice(currentProfile.goals, details) && currentProfile.activitySafety !== 'clear';
+      currentProfile.goals.forEach((goal, goalIndex) => {
+        const detail = details[goal] || 'unsure';
+        const ids = planMatchMap[goal]?.[detail] || planMatchMap[goal]?.unsure || [];
+        ids.forEach(id => {
+          const plan = planCatalogue.find(item => item.id === id);
+          if (!plan || choices.some(item => item.id === id)) return;
+          if (plan.movement && movementPaused) return;
+          if (!matchesSetting(plan, currentProfile.movementSetting)) return;
+          choices.push({ ...plan, matchedGoal: goal, matchedDetail: detail, isPrimary: goalIndex === 0 });
+        });
+      });
+      return choices.slice(0, 3);
+    }
+    function fitLabel(currentProfile) {
+      const days = { '1': 'about once a week', '2': 'about twice a week', '3': 'about three times a week', '4': 'four or more times a week', varies: 'a changing weekly schedule' };
+      const minutes = { '5_10': '5–10 minutes', '11_20': '11–20 minutes', '21_30': '21–30 minutes', varies: 'a flexible amount of time' };
+      return (days[currentProfile.daysPerWeek] || 'your stated availability') + ' · ' + (minutes[currentProfile.minutesPerStep] || 'your selected time');
     }
     function renderRoutine() {
-      const items = routineItems();
-      const count = profile ? (profile.daysPerWeek === 'varies' ? 2 : Number(profile.daysPerWeek || 2)) : 1;
-      const primary = profile ? goalLabels[profile.primaryGoal] : 'A gentle first step';
-      if (profile?.activitySafety === 'pause') {
-        $('#routineIntro').textContent = 'Movement suggestions are paused in this demo. Check with a qualified health professional about what is suitable before starting a new activity plan.';
-      } else {
-        $('#routineIntro').textContent = 'Main focus: ' + primary + '. A flexible starting rhythm of about ' + count +
-          ' day(s) a week, shaped around your answers. This is a demo, not medical or exercise advice.';
+      if (!profile) {
+        $('#routineIntro').textContent = 'Complete the questionnaire to see the plan choices matched to your answers.';
+        $('#routineSafety').innerHTML = '';
+        $('#routineList').innerHTML = '<div class="plan-empty">Your matched choices will appear here.</div>';
+        $('#routineSaved').textContent = 'No plan has been selected yet.';
+        return;
       }
-      $('#routineList').innerHTML = items.map((item, index) =>
-        '<label class="routine ' + (done[item.id] ? 'checked' : '') + '"><input type="checkbox" data-id="' + item.id +
-        '" ' + (done[item.id] ? 'checked' : '') + '><span><strong>' +
-        ['A first step', 'A little more', 'Keep it easy', 'Find your rhythm', 'A moment for you'][index] +
-        '</strong><small>' + item.title + ' · ' + item.sub + '</small></span></label>'
-      ).join('');
-      $$('[data-id]').forEach(checkbox => checkbox.onchange = () => {
-        done[checkbox.dataset.id] = checkbox.checked;
+      const choices = getPlanChoices(profile);
+      const movementPaused = requiresMovementAdvice(profile.goals || [], profile.goalDetails || {}) && profile.activitySafety !== 'clear';
+      $('#routineIntro').textContent = 'These are draft matches for ' + (goalLabels[profile.primaryGoal] || 'your goals') + '. Your availability is ' + fitLabel(profile) + '. Exact plan length and action content will be confirmed when the plans are written.';
+      $('#routineSafety').innerHTML = movementPaused ? '<div class="safety-alert" role="note"><strong>Movement options are on hold.</strong> This demo cannot assess what activity is suitable. Any other choices below relate only to your non-movement goals.</div>' : '';
+      if (!choices.length) {
+        $('#routineList').innerHTML = '<div class="plan-empty">There are no suitable plan choices in this draft catalogue for these answers yet.</div>';
+      } else {
+        $('#routineList').innerHTML = choices.map((plan, index) => {
+          const selected = profile.selectedPlanId === plan.id;
+          const goalName = goalLabels[plan.matchedGoal] || 'your goal';
+          const detailName = goalDetailLabels[plan.matchedGoal]?.[plan.matchedDetail] || 'your selected preference';
+          const matchText = plan.isPrimary ? 'Main goal: ' : 'Also matches: ';
+          const buttonText = selected ? 'Selected for now' : (plan.support ? 'Choose this support route' : 'Choose this plan');
+          return '<article class="plan-card' + (selected ? ' selected' : '') + '">' +
+            '<div class="plan-card-top"><span class="plan-choice-label">Matched choice ' + (index + 1) + '</span><span class="plan-badge">CONTENT COMING SOON</span></div>' +
+            '<h3>' + plan.title + '</h3><p class="plan-description">' + plan.summary + '</p>' +
+            '<p class="plan-match">' + matchText + goalName + ' · ' + detailName + '</p>' +
+            '<p class="plan-note">' + plan.note + '</p>' +
+            '<p class="plan-time">Time preference: ' + fitLabel(profile) + '. Exact fit will be checked when content is added.</p>' +
+            '<button type="button" class="btn ' + (selected ? 'secondary' : '') + '" data-plan-id="' + plan.id + '" aria-pressed="' + selected + '">' + buttonText + '</button>' +
+          '</article>';
+        }).join('');
+      }
+      const selectedPlan = choices.find(item => item.id === profile.selectedPlanId);
+      $('#routineSaved').textContent = selectedPlan ? 'Your choice, ' + selectedPlan.title + ', is saved on this device. Its full plan actions will appear here after they are written.' : 'Choose an option to save your preference on this device. No full plan actions are included yet.';
+      $$('[data-plan-id]').forEach(button => button.onclick = () => {
+        profile.selectedPlanId = button.dataset.planId;
         save();
         renderRoutine();
         updateHome();
       });
     }
     function updateHome() {
-      if (profile) {
-        const next = routineItems().find(item => !done[item.id]);
+      const choices = getPlanChoices(profile);
+      const selectedPlan = choices.find(item => item.id === profile?.selectedPlanId);
+      const movementPaused = !!profile && requiresMovementAdvice(profile.goals || [], profile.goalDetails || {}) && profile.activitySafety !== 'clear';
+      if (!profile) {
+        $('#heroTitle').textContent = 'Start with what feels doable.';
+        $('#heroText').textContent = 'Answer a few questions to see plan choices that reflect your goals and preferences.';
+        $('#heroBtn').textContent = 'Build my plan choices';
+        $('#nextTitle').textContent = 'Answer a few questions';
+        $('#nextSub').textContent = 'Your matched plan choices will appear here.';
+      } else {
         $('#hello').textContent = 'Welcome back to your space.';
-        $('#heroTitle').textContent = profile.activitySafety === 'pause' ? 'Your next step is getting the right guidance.' : 'Your routine is ready to flex.';
-        $('#heroText').textContent = profile.activitySafety === 'pause' ?
-          'The demo has held back on activity suggestions. Your safety comes first.' :
-          'Your starting point reflects what matters to you and the time you have. Take it one step at a time.';
-        $('#heroBtn').textContent = profile.activitySafety === 'pause' ? 'View my next step' : 'View my routine';
-        $('#nextTitle').textContent = next?.title || 'You’ve completed your steps';
-        $('#nextSub').textContent = next?.sub || 'Every small step adds up.';
+        $('#heroTitle').textContent = movementPaused ? 'Movement choices are on hold.' : selectedPlan ? 'Your plan preference is saved.' : 'Your matched choices are ready.';
+        $('#heroText').textContent = movementPaused ? 'The demo is holding back on movement options. Any other choices are based on non-movement goals.' : selectedPlan ? 'You chose ' + selectedPlan.title + '. Its full action content will be added later.' : 'Choose from up to three draft options matched to your answers.';
+        $('#heroBtn').textContent = 'View plan choices';
+        $('#nextTitle').textContent = selectedPlan ? selectedPlan.title : choices.length ? 'Choose from your matched plans' : 'Review your plan choices';
+        $('#nextSub').textContent = selectedPlan ? 'Full plan actions are coming soon.' : movementPaused && !choices.length ? 'Movement choices are on hold for this profile.' : choices.length + ' draft option' + (choices.length === 1 ? '' : 's') + ' matched to your answers.';
       }
-      const count = Object.values(done).filter(Boolean).length;
-      $('#doneCount').textContent = count;
-      $('#streakCount').textContent = Math.min(count, 7);
+      const completedActions = Object.entries(done).filter(([id, checked]) => id.startsWith('action-') && checked).length;
+      $('#doneCount').textContent = completedActions;
+      $('#streakCount').textContent = Math.min(completedActions, 7);
       $('#checkinCount').textContent = checkins.length;
       const date = new Date();
       const mondayIndex = (date.getDay() + 6) % 7;
       const names = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
       $('#weekdays').innerHTML = names.map((name, index) =>
-        '<div class="day ' + (index === mondayIndex ? 'today' : '') + ' ' + (index < count ? 'done' : '') +
-        '"><b>' + name + '</b>' + (index < count ? '✓' : '·') + '</div>'
+        '<div class="day ' + (index === mondayIndex ? 'today' : '') + ' ' + (index < completedActions ? 'done' : '') +
+        '"><b>' + name + '</b>' + (index < completedActions ? '✓' : '·') + '</div>'
       ).join('');
     }
+
 
     $$('.rating').forEach(group => {
       const kind = group.dataset.rating;

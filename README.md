@@ -1,10 +1,10 @@
 # Arclora app prototype
 
-This is a small installable web app prototype. It runs without an account or server database; questionnaire answers, routine ticks, and check-ins stay in this browser's local storage.
+This is a small installable web app prototype. It runs without an account or server database; questionnaire answers, selected plan preference, and check-ins stay in this browser's local storage.
 
 ## Questionnaire in this prototype
 
-The onboarding asks users to choose one main goal and up to two other priorities, then gives a short follow-up for each selected goal. It asks how often and for how long a small step can fit into a typical week. When movement is part of a selected goal, it also asks a general safety question without requesting a diagnosis. A cautious answer pauses movement suggestions in the demo. Habit-change goals involving smoking or alcohol point toward specialist support rather than offering a quitting or alcohol-reduction plan.
+The onboarding asks users to choose one main goal and up to two other priorities, then gives a short follow-up for each selected goal. It asks how often and for how long an action can fit into a typical week. When movement is part of a selected goal, it also asks a general safety question without requesting a diagnosis. A cautious answer pauses movement suggestions in the demo. After the questionnaire, the app now shows up to three draft plan choices matched to the selected goals and movement setting; full plan actions are placeholders to be added later. Habit-change goals involving smoking or alcohol point toward specialist support rather than offering a quitting or alcohol-reduction plan.
 
 The prototype does not assess health conditions or give medical, exercise, or nutrition advice. Do not enter real customer or health information. Smoking and alcohol choices show a reminder to seek appropriate specialist support; they do not open a verified service directory or provide a change plan. A future version must have suitable privacy information, secure storage, verified support links, and a reviewed safety approach before collecting such information.
 
