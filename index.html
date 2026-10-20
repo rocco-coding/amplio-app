@@ -15,6 +15,8 @@
     .choice.primary{border-color:#77a2fa;background:#f4f8ff;box-shadow:inset 3px 0 0 var(--blue)}
     .choice-role{display:inline-block;margin:0 0 5px;padding:3px 7px;border-radius:99px;background:var(--sky);color:#2459bd;font-size:10px;font-weight:700;letter-spacing:.03em}
     .question-note{padding:12px 14px;border-radius:12px;background:#f5f8fd;color:#52647e;font-size:12px;margin:16px 0}
+    .preference-group{border:0;padding:0;margin:20px 0}.preference-group legend{font-size:14px;font-weight:700;color:var(--navy);margin-bottom:7px}.preference-group .muted{margin-bottom:10px}.preference-summary{margin-top:14px;padding:14px 16px;border:1px solid var(--line);border-radius:14px;background:#f8faff}.preference-summary h4{font-size:13px;margin:0 0 5px;color:var(--navy)}.preference-summary p{font-size:12px;line-height:1.5;color:var(--muted);margin:4px 0}.feedback-group{border:0;padding:0;margin:20px 0}.feedback-group legend{font-size:14px;font-weight:700;color:var(--navy);margin-bottom:9px}.feedback-options{display:flex;flex-wrap:wrap;gap:8px}.feedback-option{display:inline-flex;align-items:center;gap:7px;padding:9px 11px;border:1px solid var(--line);border-radius:999px;background:#fff;color:#52647e;font-size:12px;cursor:pointer}.feedback-option:has(input:checked){border-color:#77a2fa;background:#f4f8ff;color:#2459bd}.feedback-option input{accent-color:var(--blue);margin:0}
+    .preference-group .choices{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}.preference-group .choice{width:auto;padding:9px 12px;border-radius:999px;font-size:12px}.preference-group .choice strong{font-size:12px}
   </style>
   <style>
     :root{--navy:#102346;--blue:#3572df;--sky:#eaf2ff;--mint:#dff5ec;--paper:#f5f8fc;--line:#e5ebf3;--shadow:0 18px 48px #10234612}
@@ -81,9 +83,9 @@
       <div class="grid"><article class="card"><h3>This week</h3><p class="muted">Showing up in ways that work for you.</p><div class="weekdays" id="weekdays"></div><div class="statrow"><div class="stat"><b id="doneCount">0</b><span>actions completed</span></div><div class="stat"><b id="streakCount">0</b><span>steady days</span></div><div class="stat"><b id="checkinCount">0</b><span>check-ins</span></div></div></article><article class="card"><h3>Your next action</h3><p class="muted">No pressure. Pick something that fits today.</p><div class="activity"><div class="activity-icon">☀</div><div><strong id="nextTitle">Answer a few questions</strong><small id="nextSub">See the plan options matched to your answers.</small></div></div><button class="btn secondary block" id="routineBtn">See plan choices</button></article></div>
       <div class="card week"><h3>A note from Arclora</h3><p class="muted">Your routine should fit around your life. If today gets busy, that’s useful information—we can make your next action smaller.</p></div>
     </section>
-    <section class="view" id="onboarding"><div class="eyebrow">A GOOD PLACE TO BEGIN</div><h1 class="heading">Let’s find your starting point.</h1><p class="subheading">A few focused questions help Arclora understand what matters to you and what fits your week.</p><div class="form-card"><div style="display:flex;justify-content:space-between;color:var(--muted);font-size:12px"><span id="stepLabel">Question 1</span><span>About 2–3 minutes</span></div><div class="progress"><i id="progressBar" style="width:10%"></i></div><div id="questionArea" aria-live="polite"></div><div class="form-footer"><button type="button" class="btn secondary" id="backBtn">Back</button><button type="button" class="btn" id="nextBtn">Continue</button></div><p class="notice">Prototype only: answers, including your general safety choice, stay in this browser on this device. Don’t enter real health or customer information. This app does not assess health risks or give medical advice.</p><p class="notice">This version is designed for adults aged 18+. No payment is taken in this demo. Any future paid membership should show its full recurring price before the detailed questionnaire begins.</p></div></section>
-    <section class="view" id="routine"><div class="eyebrow">MATCHED TO YOUR ANSWERS</div><h1 class="heading">Choose the plan that feels right.</h1><p class="subheading">Arclora has matched a few starting options to your goals and preferences. Full plan actions will be added later.</p><div class="card"><h3>Your plan choices</h3><p class="muted" id="routineIntro">Complete the questionnaire to see your matched plan choices.</p><div id="routineSafety"></div><div class="routine-list" id="routineList"></div><div id="routineSaved" class="notice">Your plan choice will be saved on this device.</div></div><button class="btn secondary" style="margin-top:16px" data-goto="onboarding">Update my answers</button></section>
-    <section class="view" id="checkin"><div class="eyebrow">A QUICK WEEKLY PAUSE</div><h1 class="heading">How has this week felt?</h1><p class="subheading">Your answers help shape what comes next. Keep it simple and honest.</p><div class="form-card"><div class="check-grid"><div class="check-row"><strong>How manageable did your routine feel?</strong><div class="rating" data-rating="manage"></div></div><div class="check-row"><strong>How was your energy this week?</strong><div class="rating" data-rating="energy"></div></div><div class="check-row"><strong>How much did you enjoy your chosen actions?</strong><div class="rating" data-rating="enjoy"></div></div></div><label for="note" style="font-size:13px;font-weight:650;color:var(--navy)">Anything you’d like to change?</label><textarea id="note" rows="3" placeholder="For example: shorter sessions would suit me better"></textarea><button class="btn block" id="saveCheckin">Save this check-in</button><div id="checkinSuccess" class="success hidden">Saved on this device. Thanks for checking in with yourself.</div><p class="notice">Demo only. Check-ins are not sent to a coach or stored on a server.</p></div></section>
+    <section class="view" id="onboarding"><div class="eyebrow">A GOOD PLACE TO BEGIN</div><h1 class="heading">Let’s find your starting point.</h1><p class="subheading">A few focused questions help Arclora understand what matters to you and what fits your week.</p><div class="form-card"><div style="display:flex;justify-content:space-between;color:var(--muted);font-size:12px"><span id="stepLabel">Question 1</span><span>About 3–4 minutes</span></div><div class="progress"><i id="progressBar" style="width:10%"></i></div><div id="questionArea" aria-live="polite"></div><div class="form-footer"><button type="button" class="btn secondary" id="backBtn">Back</button><button type="button" class="btn" id="nextBtn">Continue</button></div><p class="notice">Prototype only: answers, including your general safety choice, stay in this browser on this device. Don’t enter real health or customer information. This app does not assess health risks or give medical advice.</p><p class="notice">This version is designed for adults aged 18+. No payment is taken in this demo. Any future paid membership should show its full recurring price before the detailed questionnaire begins.</p></div></section>
+    <section class="view" id="routine"><div class="eyebrow">MATCHED TO YOUR ANSWERS</div><h1 class="heading">Choose the plan that feels right.</h1><p class="subheading">Arclora has matched a few starting options to your goals and preferences. Full plan actions will be added later.</p><div class="card"><h3>Your plan choices</h3><p class="muted" id="routineIntro">Complete the questionnaire to see your matched plan choices.</p><div id="preferenceSummary" class="preference-summary hidden"></div><div id="routineSafety"></div><div class="routine-list" id="routineList"></div><div id="routineSaved" class="notice">Your plan choice will be saved on this device.</div></div><button class="btn secondary" style="margin-top:16px" data-goto="onboarding">Update my answers</button></section>
+    <section class="view" id="checkin"><div class="eyebrow">A QUICK WEEKLY PAUSE</div><h1 class="heading">How has this week felt?</h1><p class="subheading">Your answers help shape what comes next. Keep it simple and honest.</p><div class="form-card"><div class="check-grid"><div class="check-row"><strong>How manageable did your routine feel?</strong><div class="rating" data-rating="manage"></div></div><div class="check-row"><strong>How was your energy this week?</strong><div class="rating" data-rating="energy"></div></div><div class="check-row"><strong>How much did you enjoy your chosen actions?</strong><div class="rating" data-rating="enjoy"></div></div></div><fieldset class="feedback-group"><legend>What worked well for you?</legend><div class="feedback-options"><label class="feedback-option"><input type="checkbox" data-feedback="worked" value="enjoyed"> <span>I enjoyed the activities</span></label><label class="feedback-option"><input type="checkbox" data-feedback="worked" value="time"> <span>The time felt right</span></label><label class="feedback-option"><input type="checkbox" data-feedback="worked" value="setting"> <span>It fit my setting</span></label><label class="feedback-option"><input type="checkbox" data-feedback="worked" value="flexible"> <span>It fit around my week</span></label></div></fieldset><fieldset class="feedback-group"><legend>What would you like to change?</legend><div class="feedback-options"><label class="feedback-option"><input type="checkbox" data-feedback="change" value="activity"> <span>A different activity</span></label><label class="feedback-option"><input type="checkbox" data-feedback="change" value="shorter"> <span>Shorter actions</span></label><label class="feedback-option"><input type="checkbox" data-feedback="change" value="longer"> <span>More time for actions</span></label><label class="feedback-option"><input type="checkbox" data-feedback="change" value="setting"> <span>A different setting</span></label><label class="feedback-option"><input type="checkbox" data-feedback="change" value="variety"> <span>More variety</span></label><label class="feedback-option"><input type="checkbox" data-feedback="change" value="schedule"> <span>A more flexible schedule</span></label></div></fieldset><button class="btn block" id="saveCheckin">Save this check-in</button><div id="checkinSuccess" class="success hidden">Saved on this device. Thanks for helping us learn what fits.</div><p class="notice">Demo only. Check-ins stay on this device and do not automatically change a plan. Please don’t enter health or other personal details.</p></div></section>
     <section class="view" id="about"><div class="eyebrow">HELLO, WE’RE ARCLORA</div><h1 class="heading">Progress, on your terms.</h1><p class="subheading">Wellbeing that starts with your real life, and adapts as it changes.</p><div class="grid"><article class="card"><h3>Small actions matter</h3><p class="muted">You don’t need a perfect routine to make progress. Choose actions that feel possible, and build from there.</p></article><article class="card"><h3>Life is allowed to change</h3><p class="muted">Busy week? Different priorities? Your plan can flex. Adjusting it is part of the process.</p></article></div><div class="card week"><h3>What this demo is</h3><p class="muted">A local, installable app prototype to explore the experience. It has no account system, coach inbox, secure database, or health guidance. Your demo answers are saved only in this browser.</p></div><button class="btn secondary" style="margin-top:17px" data-goto="onboarding">Set up my routine</button></section>
   </main></div></div>
   <script>
@@ -99,6 +101,49 @@
     let step = 0;
     let answers = createEmptyAnswers();
     let activeSteps = [];
+
+    const preferenceQuestionGroups = {
+      weekFit: [
+        { id: 'preferredTime', title: 'When does an action usually fit your day?', hint: 'Choose one, or leave this blank.', selection: 'single', options: [
+          { id: 'morning', label: 'Morning' }, { id: 'midday', label: 'Middle of the day' },
+          { id: 'evening', label: 'Evening' }, { id: 'varies', label: 'It varies' }
+        ] },
+        { id: 'commonBarriers', title: 'What can make it harder to follow a routine?', hint: 'Choose up to four, or leave this blank.', selection: 'multi', max: 4, options: [
+          { id: 'time', label: 'Not much time' }, { id: 'schedule', label: 'A changing schedule' },
+          { id: 'energy', label: 'Low energy' }, { id: 'equipment', label: 'Equipment or access' },
+          { id: 'confidence', label: 'Confidence getting started' }, { id: 'motivation', label: 'Staying motivated' }
+        ] }
+      ],
+      movement: [
+        { id: 'activitiesEnjoyed', title: 'Which activities would you enjoy or like to try?', hint: 'Choose up to four, or leave this blank.', selection: 'multi', max: 4, options: [
+          { id: 'walking', label: 'Walking' }, { id: 'strength', label: 'Strength training' },
+          { id: 'yoga', label: 'Yoga or stretching' }, { id: 'cycling', label: 'Cycling' },
+          { id: 'dance', label: 'Dance' }, { id: 'classes', label: 'Classes or sport' },
+          { id: 'swimming', label: 'Swimming' }, { id: 'mobility', label: 'Gentle mobility' },
+          { id: 'variety', label: 'Trying a variety of activities' }
+        ] },
+        { id: 'activitiesAvoided', title: 'Is there anything you would prefer to leave out?', hint: 'Choose up to four, or leave this blank.', selection: 'multi', max: 4, options: [
+          { id: 'walking', label: 'Walking' }, { id: 'strength', label: 'Strength training' },
+          { id: 'yoga', label: 'Yoga or stretching' }, { id: 'cycling', label: 'Cycling' },
+          { id: 'dance', label: 'Dance' }, { id: 'classes', label: 'Classes or sport' },
+          { id: 'swimming', label: 'Swimming' }, { id: 'mobility', label: 'Gentle mobility' }
+        ] }
+      ],
+      food: [
+        { id: 'foodsEnjoyed', title: 'What kinds of food do you generally enjoy?', hint: 'Choose up to five, or leave this blank.', selection: 'multi', max: 5, options: [
+          { id: 'fruit_veg', label: 'Fruit and vegetables' }, { id: 'grains', label: 'Bread, rice, pasta or potatoes' },
+          { id: 'beans', label: 'Beans, lentils or tofu' }, { id: 'eggs_dairy', label: 'Eggs or dairy' },
+          { id: 'fish', label: 'Fish or seafood' }, { id: 'meat', label: 'Meat or poultry' },
+          { id: 'familiar', label: 'Familiar meals' }, { id: 'variety', label: 'A mix of different foods' }
+        ] },
+        { id: 'foodFit', title: 'What would make meal ideas easier to use?', hint: 'Choose up to four, or leave this blank.', selection: 'multi', max: 4, options: [
+          { id: 'quick', label: 'Quick preparation' }, { id: 'low_cost', label: 'Lower-cost ingredients' },
+          { id: 'familiar', label: 'Familiar ingredients' }, { id: 'variety', label: 'More variety' },
+          { id: 'batch', label: 'Preparing ahead' }, { id: 'simple', label: 'Simple preparation' },
+          { id: 'flexible', label: 'Flexible meal times' }
+        ] }
+      ]
+    };
 
     const goalOptions = [
       { id: 'strength', label: 'Build strength', detail: 'For everyday tasks, exercise or sport.' },
@@ -177,7 +222,27 @@
     const $ = selector => document.querySelector(selector);
     const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
     function createEmptyAnswers() {
-      return { goals: [], goalDetails: {}, daysPerWeek: '', minutesPerStep: '', movementSetting: '', activitySafety: '' };
+      return { goals: [], goalDetails: {}, daysPerWeek: '', minutesPerStep: '', movementSetting: '', activitySafety: '', preferences: { preferredTime: '', commonBarriers: [], activitiesEnjoyed: [], activitiesAvoided: [], foodsEnjoyed: [], foodFit: [] } };
+    }
+    function answersFromProfile(currentProfile) {
+      const empty = createEmptyAnswers();
+      if (!currentProfile) return empty;
+      const saved = currentProfile.preferences || {};
+      return {
+        ...empty,
+        goals: Array.isArray(currentProfile.goals) ? [...currentProfile.goals] : [],
+        goalDetails: { ...(currentProfile.goalDetails || {}) },
+        daysPerWeek: currentProfile.daysPerWeek || '',
+        minutesPerStep: currentProfile.minutesPerStep || '',
+        movementSetting: currentProfile.movementSetting || '',
+        activitySafety: currentProfile.activitySafety === 'clear' ? 'clear' : currentProfile.activitySafety ? 'pause' : '',
+        preferences: Object.fromEntries(Object.entries(empty.preferences).map(([key, value]) => [
+          key, Array.isArray(value) ? (Array.isArray(saved[key]) ? [...saved[key]] : []) : (saved[key] || '')
+        ]))
+      };
+    }
+    function hasFoodFocus(goals, details) {
+      return goals.includes('food') || (goals.includes('routines') && details.routines === 'meals');
     }
     function requiresMovementAdvice(goals, details) {
       return goals.includes('strength') || goals.includes('stamina') ||
@@ -221,6 +286,11 @@
           { id: 'varies', label: 'It varies', detail: 'Keep the actions adaptable.' }
         ]
       });
+      questions.push({
+        id: 'weekFit', type: 'groups', title: 'Help us make this fit your day.',
+        hint: 'These extra preferences are optional. Skip anything you are unsure about.',
+        groups: preferenceQuestionGroups.weekFit
+      });
       if (requiresMovementAdvice(answers.goals, answers.goalDetails)) {
         questions.push({
           id: 'movementSetting',
@@ -247,6 +317,20 @@
             { id: 'pause_private', label: 'I’d rather not answer', detail: 'That’s okay; the demo will hold back on an activity plan.' }
           ]
         });
+        questions.push({
+          id: 'movementPreferences', type: 'groups', title: 'What kinds of movement suit you?',
+          hint: 'Share what you enjoy and anything you would rather leave out. These choices are optional.',
+          note: 'The current draft plans are matched mainly by goal and setting. Your activity preferences will help shape the plan content as it is written.',
+          groups: preferenceQuestionGroups.movement
+        });
+      }
+      if (hasFoodFocus(answers.goals, answers.goalDetails)) {
+        questions.push({
+          id: 'foodPreferences', type: 'groups', title: 'What food choices fit your life?',
+          hint: 'Only answer what you want to. These are everyday preferences, not nutrition or medical advice.',
+          note: 'Please do not enter allergy, diagnosis or other health details. The demo does not provide medical nutrition advice.',
+          groups: preferenceQuestionGroups.food
+        });
       }
       return questions;
     }
@@ -264,7 +348,7 @@
     function nav(id) {
       if (id === 'onboarding') {
         step = 0;
-        answers = createEmptyAnswers();
+        answers = answersFromProfile(profile);
         renderQuestion();
       }
       show(id);
@@ -303,20 +387,31 @@
       $('#stepLabel').textContent = 'Question ' + (step + 1) + ' of ' + activeSteps.length;
       $('#progressBar').style.width = ((step + 1) / activeSteps.length * 100) + '%';
       const goalPage = question.type === 'goals';
-      const optionsHtml = question.options.map(option => {
+      const renderChoice = (option, selected, primary = false, attributes = '') => {
+        const role = primary ? '<span class="choice-role">MAIN GOAL</span>' :
+          (goalPage && selected ? '<span class="choice-role">ALSO A PRIORITY</span>' : '');
+        const detail = option.detail ? '<small>' + option.detail + '</small>' : '';
+        return '<button type="button" class="choice' + (selected ? ' selected' : '') + (primary ? ' primary' : '') +
+          '" ' + attributes + ' aria-pressed="' + selected + '">' + role +
+          '<strong>' + option.label + '</strong>' + detail + '</button>';
+      };
+      const optionsHtml = question.type === 'groups' ? question.groups.map(group => {
+        const current = answers.preferences[group.id] || (group.selection === 'multi' ? [] : '');
+        const buttons = group.options.map(option => {
+          const selected = group.selection === 'multi' ? current.includes(option.id) : current === option.id;
+          return renderChoice(option, selected, false, 'data-group="' + group.id + '" data-group-choice="' + option.id + '"');
+        }).join('');
+        return '<fieldset class="preference-group"><legend>' + group.title + '</legend>' + (group.hint ? '<p class="muted">' + group.hint + '</p>' : '') + '<div class="choices">' + buttons + '</div></fieldset>';
+      }).join('') : question.options.map(option => {
         const selected = goalPage ? answers.goals.includes(option.id) :
           (question.goalId ? answers.goalDetails[question.goalId] : answers[question.id]) === option.id;
         const primary = goalPage && answers.goals[0] === option.id;
-        const role = primary ? '<span class="choice-role">MAIN GOAL</span>' :
-          (goalPage && selected ? '<span class="choice-role">ALSO A PRIORITY</span>' : '');
-        return '<button type="button" class="choice' + (selected ? ' selected' : '') + (primary ? ' primary' : '') +
-          '" data-choice="' + option.id + '" aria-pressed="' + selected + '">' + role +
-          '<strong>' + option.label + '</strong><small>' + option.detail + '</small></button>';
+        return renderChoice(option, selected, primary, 'data-choice="' + option.id + '"');
       }).join('');
       const note = question.note ? '<div class="question-note">' + question.note + '</div>' : '';
       const goalHint = goalPage ? '<div class="question-note">The first one you choose becomes your main goal. Add up to two more if they matter too. Tap a selected goal to remove it.</div>' : '';
       $('#questionArea').innerHTML = '<h2 class="question">' + question.title + '</h2><p class="muted">' +
-        question.hint + '</p>' + goalHint + '<div class="choices">' + optionsHtml + '</div>' + note;
+        question.hint + '</p>' + goalHint + (question.type === 'groups' ? optionsHtml : '<div class="choices">' + optionsHtml + '</div>') + note;
       $$('[data-choice]').forEach(button => button.onclick = () => {
         if (goalPage) {
           const goalId = button.dataset.choice;
@@ -336,21 +431,52 @@
         }
         renderQuestion();
       });
+      $$('[data-group-choice]').forEach(button => button.onclick = () => {
+        const group = question.groups.find(item => item.id === button.dataset.group);
+        if (!group) return;
+        const current = answers.preferences[group.id];
+        if (group.selection === 'multi') {
+          const selected = new Set(current || []);
+          if (selected.has(button.dataset.groupChoice)) selected.delete(button.dataset.groupChoice);
+          else if (selected.size >= group.max) {
+            toast('Choose up to ' + group.max + ' preferences.');
+            return;
+          } else selected.add(button.dataset.groupChoice);
+          answers.preferences[group.id] = [...selected];
+        } else {
+          answers.preferences[group.id] = current === button.dataset.groupChoice ? '' : button.dataset.groupChoice;
+        }
+        renderQuestion();
+      });
       $('#backBtn').style.visibility = step === 0 ? 'hidden' : 'visible';
       $('#nextBtn').textContent = step === activeSteps.length - 1 ? 'Show my plan choices' : 'Continue';
     }
     function finishOnboarding() {
       const hasMovementAdvice = requiresMovementAdvice(answers.goals, answers.goalDetails);
+      const foodFocus = hasFoodFocus(answers.goals, answers.goalDetails);
+      const previousPlanId = profile?.selectedPlanId;
+      const savedPreferences = { ...answers.preferences };
+      if (!hasMovementAdvice) {
+        savedPreferences.activitiesEnjoyed = [];
+        savedPreferences.activitiesAvoided = [];
+      }
+      if (!foodFocus) {
+        savedPreferences.foodsEnjoyed = [];
+        savedPreferences.foodFit = [];
+      }
       profile = {
-        version: 2,
+        version: 3,
         goals: [...answers.goals],
         primaryGoal: answers.goals[0],
         goalDetails: { ...answers.goalDetails },
         daysPerWeek: answers.daysPerWeek,
         minutesPerStep: answers.minutesPerStep,
         movementSetting: answers.movementSetting || '',
-        activitySafety: hasMovementAdvice ? (answers.activitySafety === 'clear' ? 'clear' : 'pause') : null
+        activitySafety: hasMovementAdvice ? (answers.activitySafety === 'clear' ? 'clear' : 'pause') : null,
+        preferences: savedPreferences,
+        selectedPlanId: previousPlanId
       };
+      if (!getPlanChoices(profile).some(plan => plan.id === previousPlanId)) delete profile.selectedPlanId;
       save();
       updateHome();
       show('routine');
@@ -426,14 +552,41 @@
       const minutes = { '5_10': '5–10 minutes', '11_20': '11–20 minutes', '21_30': '21–30 minutes', varies: 'a flexible amount of time' };
       return (days[currentProfile.daysPerWeek] || 'your stated availability') + ' · ' + (minutes[currentProfile.minutesPerStep] || 'your selected time');
     }
+    function preferenceLabels(groupId, values) {
+      const group = Object.values(preferenceQuestionGroups).flat().find(item => item.id === groupId);
+      return (Array.isArray(values) ? values : []).map(value => group?.options.find(option => option.id === value)?.label).filter(Boolean);
+    }
+    function renderPreferenceSummary(currentProfile) {
+      const preferences = currentProfile.preferences || {};
+      const lines = [];
+      const addList = (label, groupId) => {
+        const values = preferenceLabels(groupId, preferences[groupId]);
+        if (values.length) lines.push(label + ': ' + values.join(', '));
+      };
+      const timeGroup = preferenceQuestionGroups.weekFit.find(group => group.id === 'preferredTime');
+      const preferredTime = timeGroup.options.find(option => option.id === preferences.preferredTime)?.label;
+      if (preferredTime) lines.push('Time of day: ' + preferredTime);
+      addList('Common barriers', 'commonBarriers');
+      addList('Activities you enjoy or want to try', 'activitiesEnjoyed');
+      addList('Activities you prefer to leave out', 'activitiesAvoided');
+      addList('Foods you enjoy', 'foodsEnjoyed');
+      addList('Meal preferences', 'foodFit');
+      const note = 'Current draft choices are matched mainly by your goals and setting. These preferences will guide plan content as it is written.';
+      $('#preferenceSummary').innerHTML = '<h4>Your preferences</h4>' +
+        (lines.length ? lines.map(line => '<p>' + line + '</p>').join('') : '<p>You skipped the optional preference questions. You can add them by updating your answers.</p>') +
+        '<p>' + note + '</p>';
+      $('#preferenceSummary').classList.remove('hidden');
+    }
     function renderRoutine() {
       if (!profile) {
+        $('#preferenceSummary').classList.add('hidden');
         $('#routineIntro').textContent = 'Complete the questionnaire to see the plan choices matched to your answers.';
         $('#routineSafety').innerHTML = '';
         $('#routineList').innerHTML = '<div class="plan-empty">Your matched choices will appear here.</div>';
         $('#routineSaved').textContent = 'No plan has been selected yet.';
         return;
       }
+      renderPreferenceSummary(profile);
       const choices = getPlanChoices(profile);
       const movementPaused = requiresMovementAdvice(profile.goals || [], profile.goalDetails || {}) && profile.activitySafety !== 'clear';
       $('#routineIntro').textContent = 'These are draft matches for ' + (goalLabels[profile.primaryGoal] || 'your goals') + '. Your availability is ' + fitLabel(profile) + '. Exact plan length and action content will be confirmed when the plans are written.';
@@ -515,11 +668,12 @@
     $('#saveCheckin').onclick = () => {
       checkins.push({
         date: new Date().toISOString(),
-        note: $('#note').value,
-        ratings: readLocal(keys[3], {})
+        ratings: readLocal(keys[3], {}),
+        worked: $$('[data-feedback="worked"]:checked').map(input => input.value),
+        changes: $$('[data-feedback="change"]:checked').map(input => input.value)
       });
       save();
-      $('#note').value = '';
+      $$('[data-feedback]').forEach(input => { input.checked = false; });
       $('#checkinSuccess').classList.remove('hidden');
       updateHome();
       setTimeout(() => $('#checkinSuccess').classList.add('hidden'), 4000);
