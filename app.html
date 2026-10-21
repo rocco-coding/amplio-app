@@ -84,21 +84,108 @@
     #installDialog .dialog-close{float:right;border:0;border-radius:9px;background:#f1f5fa;color:#4d5d73;padding:6px 10px}
     @media(max-width:780px){.top-actions #installBtn{display:inline-flex;font-size:12px;padding:8px 10px}.top-actions #resetBtn{display:none}}
   </style>
+  <style>
+    .calendar-layout{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(260px,.85fr);gap:18px;align-items:start}
+    .calendar-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}
+    .calendar-toolbar h2{margin:0;color:var(--navy);font-size:18px;letter-spacing:-.025em}
+    .month-controls{display:flex;gap:7px}
+    .month-controls button{width:36px;height:36px;border:1px solid var(--line);border-radius:11px;background:#fff;color:var(--navy);font-size:18px}
+    .calendar-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px}
+    .calendar-weekday{text-align:center;color:var(--muted);font-size:11px;font-weight:700;padding:5px 0}
+    .calendar-cell{min-height:68px;border:1px solid transparent;border-radius:12px;background:#f7f9fc;color:var(--navy);padding:8px 5px 6px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:4px}
+    .calendar-cell:hover{border-color:#b6cbf4;background:#f1f6ff}
+    .calendar-cell.outside-month{color:#a1adbd;background:#fbfcfe}
+    .calendar-cell.selected{border-color:#6d99ea;background:#edf4ff;box-shadow:inset 0 0 0 1px #6d99ea}
+    .calendar-cell.today .calendar-day-number{color:var(--blue);font-weight:800}
+    .calendar-day-number{font-size:13px;font-weight:650}
+    .calendar-mark{min-height:16px;font-size:10px;color:#53709c;line-height:1.3}
+    .calendar-cell.has-events .calendar-mark{color:#2459bd;font-weight:700}
+    .calendar-cell.has-completed .calendar-mark{color:#16734d}
+    .calendar-legend{display:flex;gap:15px;flex-wrap:wrap;color:var(--muted);font-size:11px;margin-top:14px}
+    .calendar-legend span{display:inline-flex;align-items:center;gap:6px}
+    .legend-dot{width:8px;height:8px;border-radius:99px;background:var(--blue)}
+    .legend-dot.done{background:#39a77a}
+    .selected-day-title{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:12px}
+    .selected-day-title h2{margin:0;color:var(--navy);font-size:17px}
+    .event-list{display:grid;gap:10px}
+    .calendar-event{border:1px solid var(--line);border-radius:14px;padding:13px;background:#fff}
+    .calendar-event.completed{background:#f6fbf8;border-color:#cbe8d8}
+    .event-line{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+    .event-name{color:var(--navy);font-size:14px;font-weight:700;overflow-wrap:anywhere}
+    .event-meta{color:var(--muted);font-size:11px;margin-top:3px}
+    .event-kind{flex:none;border-radius:99px;padding:4px 8px;background:#eef3fa;color:#59708f;font-size:10px;font-weight:700}
+    .event-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:11px}
+    .small-button{border:0;border-radius:9px;padding:8px 10px;background:#eff4ff;color:#2459bd;font-size:12px;font-weight:700}
+    .small-button.delete{background:transparent;color:#7d899a}
+    .empty-day{padding:15px;border:1px dashed #cbd6e5;border-radius:13px;color:var(--muted);font-size:13px}
+    .calendar-privacy{margin-top:14px;padding:12px 13px;border-radius:12px;background:#f6f8fc;color:var(--muted);font-size:11px}
+    .feedback-scale{display:grid;gap:7px;margin:12px 0 18px}
+    .feedback-scale legend{font-size:14px;font-weight:700;color:var(--navy);padding:0 0 4px}
+    .feedback-scale .scale-ends{display:flex;justify-content:space-between;gap:12px;color:var(--muted);font-size:11px}
+    .rating.feedback button{width:42px;height:42px;border-radius:12px;font-weight:700}
+    .radio-choices{display:grid;gap:8px;margin:10px 0 18px}
+    .radio-choice{display:flex;align-items:center;gap:9px;padding:10px 12px;border:1px solid var(--line);border-radius:11px;font-size:13px;color:var(--ink)}
+    .radio-choice input{accent-color:var(--blue)}
+    #eventDialog,#completeDialog{width:min(540px,calc(100vw - 28px));max-height:min(88vh,760px);overflow:auto;padding:25px;border:1px solid var(--line);border-radius:20px;background:#fff;color:var(--ink);box-shadow:0 24px 80px #10234635}
+    #eventDialog::backdrop,#completeDialog::backdrop{background:#0d1d34a8;backdrop-filter:blur(3px)}
+    #eventDialog h2,#completeDialog h2{margin:0 38px 7px 0;color:var(--navy);font-size:22px;letter-spacing:-.03em}
+    .dialog-close{float:right;border:0;border-radius:9px;background:#f1f5fa;color:#4d5d73;padding:6px 10px}
+    .field-label{display:block;margin:14px 0 6px;color:var(--navy);font-size:13px;font-weight:700}
+    .field-input{width:100%;border:1px solid var(--line);border-radius:11px;background:#fff;padding:11px 12px;color:var(--ink)}
+    .dialog-actions{display:flex;justify-content:flex-end;gap:9px;margin-top:19px}
+    .dialog-copy{margin:0 0 15px;color:var(--muted);font-size:13px}
+    @media(max-width:900px){.calendar-layout{grid-template-columns:1fr}}
+    @media(max-width:780px){.nav button{padding-left:4px;padding-right:4px}.calendar-cell{min-height:56px;padding:7px 2px 5px}.calendar-grid{gap:3px}.calendar-legend{gap:10px}}
+    @media(max-width:390px){.calendar-cell{min-height:49px}.calendar-day-number{font-size:12px}.calendar-mark{font-size:9px}.rating.feedback button{width:38px;height:38px}}
+  </style>
 </head>
 <body><div class="app">
   <header class="topbar"><div class="brand"><img class="brand-mark" src="icon-v3.svg" alt=""><span class="brand-name">Arclora</span><span class="tagline">Progress, on your terms</span></div><div class="top-actions"><button class="quiet install" id="installBtn" type="button" aria-haspopup="dialog">＋ Install help</button><button class="quiet" id="resetBtn">Reset demo</button></div></header>
-  <div class="layout"><aside><nav class="nav" aria-label="Main navigation"><button class="active" data-view="home"><span>⌂</span>Today</button><button data-view="routine"><span>◷</span>Plan choices</button><button data-view="checkin"><span>↗</span>Check-in</button><button data-view="about"><span>ⓘ</span>About</button></nav><div class="aside-note"><strong>A little is still progress.</strong>Your plan can change whenever life does.</div></aside>
+  <div class="layout"><aside><nav class="nav" aria-label="Main navigation"><button class="active" data-view="home"><span>⌂</span>Today</button><button data-view="routine"><span>◷</span>Plan choices</button><button data-view="calendar"><span>▦</span>Calendar</button><button data-view="checkin"><span>↗</span>Check-in</button><button data-view="about"><span>ⓘ</span>About</button></nav><div class="aside-note"><strong>A little is still progress.</strong>Your plan can change whenever life does.</div></aside>
   <main class="main">
     <section class="view active" id="home"><div class="eyebrow" id="greeting">YOUR SPACE</div><h1 class="heading" id="hello">A fresh start, at your pace.</h1><p class="subheading">Small actions count. Let’s make today feel a little better.</p>
       <div class="hero"><div><div class="eyebrow" style="color:#a9c8ff">YOUR WEEK, YOUR WAY</div><h2 id="heroTitle">Start with what feels doable.</h2><p id="heroText">Your answers can help you choose a plan that feels right for you.</p><button class="btn" style="margin-top:18px" id="heroBtn">Build my plan choices</button></div><div class="hero-art" aria-hidden="true"><svg viewBox="0 0 300 220" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="sunrise" x1="106" y1="43" x2="190" y2="123" gradientUnits="userSpaceOnUse"><stop stop-color="#b4f1df"/><stop offset="1" stop-color="#63c8c9"/></linearGradient></defs><circle cx="150" cy="78" r="39" fill="url(#sunrise)"/><circle cx="150" cy="78" r="56" stroke="#dcecff" stroke-opacity=".18" stroke-width="2"/><path d="M20 174c35-49 78-74 130-74s95 25 130 74" stroke="#eef5ff" stroke-linecap="round" stroke-width="8"/><path d="M64 183c24-32 52-48 86-48s62 16 86 48" stroke="#80e1d1" stroke-linecap="round" stroke-width="7"/><path d="M46 195h208" stroke="#fff" stroke-linecap="round" stroke-opacity=".48" stroke-width="5"/></svg></div></div>
-      <div class="grid"><article class="card"><h3>This week</h3><p class="muted">Showing up in ways that work for you.</p><div class="weekdays" id="weekdays"></div><div class="statrow"><div class="stat"><b id="doneCount">0</b><span>actions completed</span></div><div class="stat"><b id="streakCount">0</b><span>steady days</span></div><div class="stat"><b id="checkinCount">0</b><span>check-ins</span></div></div></article><article class="card"><h3>Your next action</h3><p class="muted">No pressure. Pick something that fits today.</p><div class="activity"><div class="activity-icon">☀</div><div><strong id="nextTitle">Answer a few questions</strong><small id="nextSub">See the plan options matched to your answers.</small></div></div><button class="btn secondary block" id="routineBtn">See plan choices</button></article></div>
+      <div class="grid"><article class="card"><h3>This week</h3><p class="muted">Your progress is counted on the days you log it.</p><div class="weekdays" id="weekdays"></div><div class="statrow"><div class="stat"><b id="doneCount">0</b><span>actions this week</span></div><div class="stat"><b id="streakCount">0</b><span>days with progress</span></div><div class="stat"><b id="checkinCount">0</b><span>weekly check-ins</span></div></div></article><article class="card"><h3>Your next action</h3><p class="muted">Choose a day that works for your real life.</p><div class="activity"><div class="activity-icon">☀</div><div><strong id="nextTitle">Answer a few questions</strong><small id="nextSub">See the plan options matched to your answers.</small></div></div><button class="btn secondary block" id="routineBtn">See plan choices</button></article></div>
+      <div class="card week"><h3>Your latest feedback</h3><p class="muted" id="adaptationText">After you complete a sample action, your preference for next time will be saved here.</p></div>
       <div class="card week"><h3>A note from Arclora</h3><p class="muted">Your routine should fit around your life. If today gets busy, that’s useful information—we can make your next action smaller.</p></div>
     </section>
     <section class="view" id="onboarding"><div class="eyebrow">A GOOD PLACE TO BEGIN</div><h1 class="heading">Let’s find your starting point.</h1><p class="subheading">A few focused questions help Arclora understand what matters to you and what fits your week.</p><div class="form-card"><div style="display:flex;justify-content:space-between;color:var(--muted);font-size:12px"><span id="stepLabel">Question 1</span><span>About 2–3 minutes</span></div><div class="progress"><i id="progressBar" style="width:10%"></i></div><div id="questionArea" aria-live="polite"></div><div class="form-footer"><button type="button" class="btn secondary" id="backBtn">Back</button><button type="button" class="btn" id="nextBtn">Continue</button></div><p class="notice">Prototype only: answers, including your general safety choice, stay in this browser on this device. Don’t enter real health or customer information. This app does not assess health risks or give medical advice.</p><p class="notice">This version is designed for adults aged 18+. No payment is taken in this demo. Any future paid membership should show its full recurring price before the detailed questionnaire begins.</p></div></section>
-    <section class="view" id="routine"><div class="eyebrow">MATCHED TO YOUR ANSWERS</div><h1 class="heading">Choose the plan that feels right.</h1><p class="subheading">Arclora has matched a few starting options to your goals and preferences. Full plan actions will be added later.</p><div class="card"><h3>Your plan choices</h3><p class="muted" id="routineIntro">Complete the questionnaire to see your matched plan choices.</p><div id="routineSafety"></div><div class="routine-list" id="routineList"></div><div id="routineSaved" class="notice">Your plan choice will be saved on this device.</div></div><button class="btn secondary" style="margin-top:16px" data-goto="onboarding">Update my answers</button></section>
-    <section class="view" id="checkin"><div class="eyebrow">A QUICK WEEKLY PAUSE</div><h1 class="heading">How has this week felt?</h1><p class="subheading">Your answers help shape what comes next. Keep it simple and honest.</p><div class="form-card"><div class="check-grid"><div class="check-row"><strong>How manageable did your routine feel?</strong><div class="rating" data-rating="manage"></div></div><div class="check-row"><strong>How was your energy this week?</strong><div class="rating" data-rating="energy"></div></div><div class="check-row"><strong>How much did you enjoy your chosen actions?</strong><div class="rating" data-rating="enjoy"></div></div></div><label for="note" style="font-size:13px;font-weight:650;color:var(--navy)">Anything you’d like to change?</label><textarea id="note" rows="3" placeholder="For example: shorter sessions would suit me better"></textarea><button class="btn block" id="saveCheckin">Save this check-in</button><div id="checkinSuccess" class="success hidden">Saved on this device. Thanks for checking in with yourself.</div><p class="notice">Demo only. Check-ins are not sent to a coach or stored on a server.</p></div></section>
-    <section class="view" id="about"><div class="eyebrow">HELLO, WE’RE ARCLORA</div><h1 class="heading">Progress, on your terms.</h1><p class="subheading">Wellbeing that starts with your real life, and adapts as it changes.</p><div class="grid"><article class="card"><h3>Small actions matter</h3><p class="muted">You don’t need a perfect routine to make progress. Choose actions that feel possible, and build from there.</p></article><article class="card"><h3>Life is allowed to change</h3><p class="muted">Busy week? Different priorities? Your plan can flex. Adjusting it is part of the process.</p></article></div><div class="card week"><h3>What this demo is</h3><p class="muted">A local, installable app prototype to explore the experience. It has no account system, coach inbox, secure database, or health guidance. Your demo answers are saved only in this browser.</p></div><button class="btn secondary" style="margin-top:17px" data-goto="onboarding">Set up my routine</button></section>
+    <section class="view" id="routine"><div class="eyebrow">MATCHED TO YOUR ANSWERS</div><h1 class="heading">Choose the plan that feels right.</h1><p class="subheading">Arclora has matched a few starting options to your goals and preferences. Full plan actions will be added later.</p><div class="card"><h3>Your plan choices</h3><p class="muted" id="routineIntro">Complete the questionnaire to see your matched plan choices.</p><div id="routineSafety"></div><div class="routine-list" id="routineList"></div><div id="routineSaved" class="notice">Your plan choice will be saved on this device.</div></div><button class="btn secondary" style="margin-top:16px" data-goto="onboarding">Update my answers</button><button class="btn" style="margin:16px 0 0 8px" id="scheduleActionBtn">Try the calendar</button></section>
+    <section class="view" id="calendar"><div class="eyebrow">YOUR WEEK, YOUR LIFE</div><h1 class="heading">Make room for what matters.</h1><p class="subheading">Plan sample actions around your week and keep personal dates in view. Arclora won’t move anything automatically in this demo.</p><div class="calendar-layout"><article class="card"><div class="calendar-toolbar"><h2 id="monthTitle">Month</h2><div class="month-controls"><button type="button" id="prevMonth" aria-label="Previous month">‹</button><button type="button" id="nextMonth" aria-label="Next month">›</button></div></div><div class="calendar-grid" id="calendarGrid" role="grid" aria-label="Monthly calendar"></div><div class="calendar-legend"><span><i class="legend-dot"></i>Planned entry</span><span><i class="legend-dot done"></i>Completed action</span></div><div class="calendar-privacy">Calendar entries and feedback stay in this browser on this device. Don’t enter sensitive health information or anything you would not want saved locally.</div></article><article class="card"><div class="selected-day-title"><h2 id="selectedDateTitle">Selected day</h2><button class="small-button" type="button" id="addCalendarEntry">＋ Add</button></div><div class="event-list" id="dayEvents"></div></article></div></section>
+    <section class="view" id="checkin"><div class="eyebrow">A QUICK WEEKLY PAUSE</div><h1 class="heading">How has this week felt?</h1><p class="subheading">Your answers are saved against the plan you chose, so the question is clear and the feedback has context.</p><div class="form-card"><div id="checkinPlanContext" class="question-note">Choose a plan first to make this check-in specific.</div><div class="check-grid"><div class="check-row"><div><strong>How manageable did this plan feel this week?</strong><small id="scale-manage" class="muted scale-hint">1 = difficult to fit · 5 = fitted easily</small></div><div class="rating" data-rating="manage"></div></div><div class="check-row"><div><strong>How was your energy overall this week?</strong><small id="scale-energy" class="muted scale-hint">1 = very low · 5 = very good</small></div><div class="rating" data-rating="energy"></div></div><div class="check-row"><div><strong>How much did you enjoy the actions you tried?</strong><small id="scale-enjoy" class="muted scale-hint">1 = not at all · 5 = a lot</small></div><div class="rating" data-rating="enjoy"></div></div></div><label for="weekPreference" class="field-label">What would you prefer for next week?</label><select class="field-input" id="weekPreference"><option value="">Choose one (optional)</option><option value="keep">Keep this approach</option><option value="easier">Make actions easier to fit</option><option value="different">Offer different kinds of actions</option></select><label for="note" class="field-label">Anything else you’d like to change?</label><textarea id="note" rows="3" placeholder="For example: shorter actions or a different day might suit me better"></textarea><button class="btn block" id="saveCheckin">Save this check-in</button><div id="checkinSuccess" class="success hidden">Saved on this device, linked to your selected plan.</div><p class="notice">This demo records your preference for future plan design. It does not automatically change activities. Check-ins are not sent to a coach or stored on a server.</p></div></section>
+    <section class="view" id="about"><div class="eyebrow">HELLO, WE’RE ARCLORA</div><h1 class="heading">Progress, on your terms.</h1><p class="subheading">Wellbeing that starts with your real life, and adapts as it changes.</p><div class="grid"><article class="card"><h3>Small actions matter</h3><p class="muted">You don’t need a perfect routine to make progress. Choose actions that feel possible, and build from there.</p></article><article class="card"><h3>Life is allowed to change</h3><p class="muted">Busy week? Different priorities? Your plan can flex. Adjusting it is part of the process.</p></article></div><div class="card week"><h3>What this demo is</h3><p class="muted">A local, installable app prototype to explore the experience. It has no account system, coach inbox, secure database, or health guidance. Plan activities are not written yet; calendar actions are sample entries you add yourself. Your answers, events and check-ins are saved only in this browser on this device.</p></div><button class="btn secondary" style="margin-top:17px" data-goto="onboarding">Set up my routine</button></section>
   </main></div></div>
+  <dialog id="eventDialog" aria-labelledby="eventDialogTitle">
+    <button class="dialog-close" id="closeEventDialog" type="button" aria-label="Close">Close</button>
+    <h2 id="eventDialogTitle">Add to your calendar</h2>
+    <p class="dialog-copy">Add a sample action or a personal date. Entries stay on this device.</p>
+    <form id="eventForm">
+      <label class="field-label" for="entryType">What are you adding?</label>
+      <select class="field-input" id="entryType"><option value="action">Planned action</option><option value="personal">Personal event</option></select>
+      <label class="field-label" for="entryTitle">Name</label>
+      <input class="field-input" id="entryTitle" type="text" maxlength="70" required placeholder="For example, a walk or a birthday">
+      <label class="field-label" for="entryDate">Date</label>
+      <input class="field-input" id="entryDate" type="date" required>
+      <label class="field-label" for="entryTime">Time (optional)</label>
+      <input class="field-input" id="entryTime" type="time">
+      <div class="question-note" id="entryPlanContext">Your selected plan can be linked to a sample action. No activity instructions are included yet.</div>
+      <div class="dialog-actions"><button type="button" class="btn secondary" id="cancelEvent">Cancel</button><button type="submit" class="btn">Add to calendar</button></div>
+    </form>
+  </dialog>
+  <dialog id="completeDialog" aria-labelledby="completeDialogTitle">
+    <button class="dialog-close" id="closeCompleteDialog" type="button" aria-label="Close">Close</button>
+    <h2 id="completeDialogTitle">How did it go?</h2>
+    <p class="dialog-copy" id="completeActionContext"></p>
+    <form id="completeForm">
+      <fieldset class="feedback-scale"><legend>How manageable was it?</legend><div class="rating feedback" data-feedback-rating="manage"></div><div class="scale-ends"><span>1 · Very difficult</span><span>5 · Very manageable</span></div></fieldset>
+      <fieldset class="feedback-scale"><legend>How much did you enjoy it?</legend><div class="rating feedback" data-feedback-rating="enjoy"></div><div class="scale-ends"><span>1 · Not at all</span><span>5 · A lot</span></div></fieldset>
+      <fieldset class="feedback-scale"><legend>How was your energy afterwards?</legend><div class="radio-choices"><label class="radio-choice"><input type="radio" name="energyAfter" value="lower"> Lower than before</label><label class="radio-choice"><input type="radio" name="energyAfter" value="same"> About the same</label><label class="radio-choice"><input type="radio" name="energyAfter" value="higher"> Higher than before</label></div></fieldset>
+      <label class="field-label" for="nextActionPreference">What would you prefer next time?</label>
+      <select class="field-input" id="nextActionPreference" required><option value="">Choose one</option><option value="keep">Keep it similar</option><option value="easier">Make it easier to fit</option><option value="harder">Make it a little more challenging</option><option value="different">Try a different kind of action</option></select>
+      <p class="notice">Your feedback is saved on this device. In this demo it records a preference; it doesn’t automatically change your plan or assess what activity is safe.</p>
+      <div class="dialog-actions"><button type="button" class="btn secondary" id="cancelComplete">Cancel</button><button type="submit" class="btn">Save and mark complete</button></div>
+    </form>
+  </dialog>
   <dialog id="installDialog" aria-labelledby="installDialogTitle">
     <button class="dialog-close" id="closeInstallDialog" type="button" aria-label="Close install instructions">Close</button>
     <h2 id="installDialogTitle">Add Arclora to your home screen</h2>
@@ -112,6 +199,8 @@
   <script>
     const keys = ['amplio_profile_v2', 'amplio_done_v2', 'amplio_checkins_v2', 'amplio_ratings_v2'];
     const previousKeys = ['amplio_profile', 'amplio_done', 'amplio_checkins', 'amplio_ratings'];
+    const eventKey = 'arclora_calendar_events_v1';
+    const completionKey = 'arclora_action_completions_v1';
     function readLocal(key, fallback) {
       try { return JSON.parse(localStorage.getItem(key) || 'null') ?? fallback; }
       catch { return fallback; }
@@ -119,9 +208,19 @@
     let profile = readLocal(keys[0], null);
     let done = readLocal(keys[1], {});
     let checkins = readLocal(keys[2], []);
+    if (!Array.isArray(checkins)) checkins = [];
+    let calendarEvents = readLocal(eventKey, []);
+    if (!Array.isArray(calendarEvents)) calendarEvents = [];
+    let completionLog = readLocal(completionKey, []);
+    if (!Array.isArray(completionLog)) completionLog = [];
     let step = 0;
     let answers = createEmptyAnswers();
     let activeSteps = [];
+    let weeklyRatings = {};
+    let completionRatings = {};
+    let completionEventId = null;
+    let selectedCalendarDate = dateKey(new Date());
+    let visibleCalendarMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
 
     const goalOptions = [
       { id: 'strength', label: 'Build strength', detail: 'For everyday tasks, exercise or sport.' },
@@ -199,6 +298,20 @@
 
     const $ = selector => document.querySelector(selector);
     const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
+    const htmlSafe = value => String(value ?? '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
+    function dateKey(date) {
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      return year + '-' + month + '-' + day;
+    }
+    function parseDateKey(key) {
+      const [year, month, day] = String(key).split('-').map(Number);
+      return new Date(year, month - 1, day);
+    }
+    function prettyDate(key, options = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }) {
+      return parseDateKey(key).toLocaleDateString(undefined, options);
+    }
     function createEmptyAnswers() {
       return { goals: [], goalDetails: {}, daysPerWeek: '', minutesPerStep: '', movementSetting: '', activitySafety: '' };
     }
@@ -277,11 +390,15 @@
       localStorage.setItem(keys[0], JSON.stringify(profile));
       localStorage.setItem(keys[1], JSON.stringify(done));
       localStorage.setItem(keys[2], JSON.stringify(checkins));
+      localStorage.setItem(eventKey, JSON.stringify(calendarEvents));
+      localStorage.setItem(completionKey, JSON.stringify(completionLog));
     }
     function show(id) {
       $$('.view').forEach(view => view.classList.toggle('active', view.id === id));
       $$('.nav button').forEach(button => button.classList.toggle('active', button.dataset.view === id));
       if (id === 'routine') renderRoutine();
+      if (id === 'calendar') renderCalendar();
+      if (id === 'checkin') renderCheckin();
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
     function nav(id) {
@@ -502,51 +619,278 @@
       } else {
         $('#hello').textContent = 'Welcome back to your space.';
         $('#heroTitle').textContent = movementPaused ? 'Movement choices are on hold.' : selectedPlan ? 'Your plan preference is saved.' : 'Your matched choices are ready.';
-        $('#heroText').textContent = movementPaused ? 'The demo is holding back on movement options. Any other choices are based on non-movement goals.' : selectedPlan ? 'You chose ' + selectedPlan.title + '. Its full action content will be added later.' : 'Choose from up to three draft options matched to your answers.';
+        $('#heroText').textContent = movementPaused ? 'The demo is holding back on movement options. Any other choices are based on non-movement goals.' : selectedPlan ? 'You chose ' + selectedPlan.title + '. Add sample entries to your calendar while the plan actions are being written.' : 'Choose from up to three draft options matched to your answers.';
         $('#heroBtn').textContent = 'View plan choices';
-        $('#nextTitle').textContent = selectedPlan ? selectedPlan.title : choices.length ? 'Choose from your matched plans' : 'Review your plan choices';
-        $('#nextSub').textContent = selectedPlan ? 'Full plan actions are coming soon.' : movementPaused && !choices.length ? 'Movement choices are on hold for this profile.' : choices.length + ' draft option' + (choices.length === 1 ? '' : 's') + ' matched to your answers.';
+        const todayKey = dateKey(new Date());
+        const nextAction = calendarEvents.filter(item => item.type === 'action' && !item.completedAt && item.date >= todayKey)
+          .sort((a, b) => a.date.localeCompare(b.date) || (a.time || '').localeCompare(b.time || ''))[0];
+        if (nextAction) {
+          $('#nextTitle').textContent = nextAction.title;
+          $('#nextSub').textContent = nextAction.date === todayKey ? 'Planned for today · open your calendar to log it.' : 'Planned for ' + prettyDate(nextAction.date, { weekday: 'short', day: 'numeric', month: 'short' }) + ' · open your calendar to log it.';
+        } else {
+          $('#nextTitle').textContent = selectedPlan ? 'Add a sample action to your calendar' : choices.length ? 'Choose from your matched plans' : 'Review your plan choices';
+          $('#nextSub').textContent = selectedPlan ? 'Your plan content is still being written; try the tracker with a sample entry.' : movementPaused && !choices.length ? 'Movement choices are on hold for this profile.' : choices.length + ' draft option' + (choices.length === 1 ? '' : 's') + ' matched to your answers.';
+        }
+        $('#routineBtn').textContent = selectedPlan ? 'Open calendar' : 'See plan choices';
+        $('#routineBtn').onclick = () => selectedPlan ? show('calendar') : show('routine');
       }
-      const completedActions = Object.entries(done).filter(([id, checked]) => id.startsWith('action-') && checked).length;
-      $('#doneCount').textContent = completedActions;
-      $('#streakCount').textContent = Math.min(completedActions, 7);
-      $('#checkinCount').textContent = checkins.length;
-      const date = new Date();
-      const mondayIndex = (date.getDay() + 6) % 7;
+      const today = new Date();
+      const monday = new Date(today.getFullYear(), today.getMonth(), today.getDate() - ((today.getDay() + 6) % 7));
+      const weekDays = Array.from({ length: 7 }, (_, index) => {
+        const day = new Date(monday.getFullYear(), monday.getMonth(), monday.getDate() + index);
+        return dateKey(day);
+      });
+      const weekSet = new Set(weekDays);
+      const weekCompletions = completionLog.filter(item => weekSet.has(item.date));
+      const activeDates = new Set(weekCompletions.map(item => item.date));
+      const weeklyCheckins = checkins.filter(item => weekSet.has(item.day || (item.date ? dateKey(new Date(item.date)) : '')));
+      $('#doneCount').textContent = weekCompletions.length;
+      $('#streakCount').textContent = activeDates.size;
+      $('#checkinCount').textContent = weeklyCheckins.length;
       const names = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
       $('#weekdays').innerHTML = names.map((name, index) =>
-        '<div class="day ' + (index === mondayIndex ? 'today' : '') + ' ' + (index < completedActions ? 'done' : '') +
-        '"><b>' + name + '</b>' + (index < completedActions ? '✓' : '·') + '</div>'
+        '<div class="day ' + (weekDays[index] === dateKey(today) ? 'today' : '') + ' ' + (activeDates.has(weekDays[index]) ? 'done' : '') +
+        '" aria-label="' + htmlSafe(prettyDate(weekDays[index])) + (activeDates.has(weekDays[index]) ? ', action completed' : '') + '"><b>' + name + '</b>' + (activeDates.has(weekDays[index]) ? '✓' : '·') + '</div>'
       ).join('');
+      const latestFeedback = [...completionLog].sort((a, b) => (b.completedAt || '').localeCompare(a.completedAt || ''))[0];
+      const preferences = { keep: 'keep the next action similar', easier: 'make the next action easier to fit', harder: 'make the next action a little more challenging', different: 'try a different kind of action next time' };
+      $('#adaptationText').textContent = latestFeedback
+        ? 'For “' + latestFeedback.title + '”, you asked to ' + (preferences[latestFeedback.nextPreference] || 'adjust the next action') + '. This demo saves that feedback; it does not rewrite your calendar automatically.'
+        : 'After you complete a sample action, your preference for next time will be saved here.';
     }
 
-
-    $$('.rating').forEach(group => {
-      const kind = group.dataset.rating;
-      group.innerHTML = [1, 2, 3, 4, 5].map(number =>
-        '<button type="button" data-n="' + number + '">' + number + '</button>'
-      ).join('');
+    function getSelectedPlan() {
+      return profile ? getPlanChoices(profile).find(item => item.id === profile.selectedPlanId) : null;
+    }
+    function ratingButtons(value, prefix) {
+      return [1, 2, 3, 4, 5].map(number => '<button type="button" data-n="' + number + '" aria-label="' + prefix + ' ' + number + '" aria-pressed="' + (value === number) + '" class="' + (value === number ? 'sel' : '') + '">' + number + '</button>').join('');
+    }
+    function renderRatingGroup(group, kind, values) {
+      group.innerHTML = ratingButtons(values[kind], kind === 'energy' ? 'Energy rating' : kind === 'enjoy' ? 'Enjoyment rating' : 'Manageability rating');
       group.onclick = event => {
-        if (event.target.dataset.n) {
-          $$('button', group).forEach(button => button.classList.toggle('sel', button === event.target));
-          const ratings = readLocal(keys[3], {});
-          ratings[kind] = Number(event.target.dataset.n);
-          localStorage.setItem(keys[3], JSON.stringify(ratings));
-        }
+        const button = event.target.closest('button[data-n]');
+        if (!button) return;
+        values[kind] = Number(button.dataset.n);
+        $$('button', group).forEach(item => {
+          const selected = item === button;
+          item.classList.toggle('sel', selected);
+          item.setAttribute('aria-pressed', String(selected));
+        });
       };
-    });
-    $('#saveCheckin').onclick = () => {
-      checkins.push({
-        date: new Date().toISOString(),
-        note: $('#note').value,
-        ratings: readLocal(keys[3], {})
+    }
+    function renderCheckin() {
+      const plan = getSelectedPlan();
+      $('#checkinPlanContext').innerHTML = plan
+        ? 'This check-in is about <strong>' + htmlSafe(plan.title) + '</strong>.'
+        : 'Choose a plan first, then return here to save a check-in linked to it. <button type="button" class="small-button" id="checkinChoosePlan">Choose a plan</button>';
+      const choosePlan = $('#checkinChoosePlan');
+      if (choosePlan) choosePlan.onclick = () => show('routine');
+      $$('.rating[data-rating]').forEach(group => renderRatingGroup(group, group.dataset.rating, weeklyRatings));
+      $('#saveCheckin').disabled = !plan;
+      $('#saveCheckin').classList.toggle('secondary', !plan);
+    }
+    function renderCalendar() {
+      const month = new Date(visibleCalendarMonth.getFullYear(), visibleCalendarMonth.getMonth(), 1);
+      $('#monthTitle').textContent = month.toLocaleDateString(undefined, { month: 'long', year: 'numeric' });
+      const plan = getSelectedPlan();
+      $('#entryPlanContext').textContent = plan
+        ? 'A planned action will be linked to ' + plan.title + '. This demo has no written activity content yet.'
+        : 'No plan is selected. You can still add a standalone sample action; it won’t contain exercise or wellbeing instructions.';
+      const headers = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+      const firstOffset = (month.getDay() + 6) % 7;
+      const gridStart = new Date(month.getFullYear(), month.getMonth(), 1 - firstOffset);
+      let markup = headers.map(name => '<div class="calendar-weekday" role="columnheader">' + name + '</div>').join('');
+      for (let index = 0; index < 42; index++) {
+        const date = new Date(gridStart.getFullYear(), gridStart.getMonth(), gridStart.getDate() + index);
+        const key = dateKey(date);
+        const entries = calendarEvents.filter(item => item.date === key);
+        const isCompleted = entries.some(item => item.completedAt);
+        const classes = ['calendar-cell'];
+        if (date.getMonth() !== month.getMonth()) classes.push('outside-month');
+        if (key === selectedCalendarDate) classes.push('selected');
+        if (key === dateKey(new Date())) classes.push('today');
+        if (entries.length) classes.push('has-events');
+        if (isCompleted) classes.push('has-completed');
+        const mark = entries.length ? (isCompleted ? '✓ ' : '') + entries.length + (entries.length === 1 ? ' item' : ' items') : ' ';
+        markup += '<button type="button" class="' + classes.join(' ') + '" role="gridcell" aria-selected="' + (key === selectedCalendarDate) + '" aria-label="' + htmlSafe(prettyDate(key)) + (entries.length ? ', ' + entries.length + ' calendar ' + (entries.length === 1 ? 'entry' : 'entries') : '') + '" data-calendar-day="' + key + '"><span class="calendar-day-number">' + date.getDate() + '</span><span class="calendar-mark">' + htmlSafe(mark) + '</span></button>';
+      }
+      $('#calendarGrid').innerHTML = markup;
+      $$('[data-calendar-day]').forEach(button => button.onclick = () => {
+        selectedCalendarDate = button.dataset.calendarDay;
+        const selected = parseDateKey(selectedCalendarDate);
+        visibleCalendarMonth = new Date(selected.getFullYear(), selected.getMonth(), 1);
+        renderCalendar();
       });
+      $('#selectedDateTitle').textContent = prettyDate(selectedCalendarDate, { weekday: 'long', day: 'numeric', month: 'long' });
+      renderDayEvents();
+    }
+    function renderDayEvents() {
+      const entries = calendarEvents.filter(item => item.date === selectedCalendarDate)
+        .sort((a, b) => (a.time || '').localeCompare(b.time || '') || a.title.localeCompare(b.title));
+      if (!entries.length) {
+        $('#dayEvents').innerHTML = '<div class="empty-day">Nothing planned for this day. Add a personal date or a sample action when it suits you.</div>';
+        return;
+      }
+      $('#dayEvents').innerHTML = entries.map(item => {
+        const isAction = item.type === 'action';
+        const isDone = !!item.completedAt;
+        const completion = completionLog.find(log => log.eventId === item.id);
+        const preferenceText = completion?.nextPreference ? ' · Next time: ' + ({ keep: 'keep it similar', easier: 'make it easier to fit', harder: 'a little more challenging', different: 'try something different' }[completion.nextPreference] || 'preference saved') : '';
+        const association = item.planTitle ? ' · ' + htmlSafe(item.planTitle) : '';
+        const time = item.time ? htmlSafe(item.time) + ' · ' : '';
+        return '<article class="calendar-event' + (isDone ? ' completed' : '') + '"><div class="event-line"><div><div class="event-name">' + htmlSafe(item.title) + '</div><div class="event-meta">' + time + (isAction ? (isDone ? 'Completed' : 'Planned action') + association : 'Personal event') + htmlSafe(preferenceText) + '</div></div><span class="event-kind">' + (isAction ? (isDone ? 'DONE' : 'ACTION') : 'PERSONAL') + '</span></div><div class="event-actions">' + (isAction && !isDone ? '<button type="button" class="small-button" data-complete-event="' + htmlSafe(item.id) + '">Complete action</button>' : '') + '<button type="button" class="small-button delete" data-delete-event="' + htmlSafe(item.id) + '">Remove</button></div></article>';
+      }).join('');
+      $$('[data-complete-event]').forEach(button => button.onclick = () => openCompletionDialog(button.dataset.completeEvent));
+      $$('[data-delete-event]').forEach(button => button.onclick = () => removeCalendarEvent(button.dataset.deleteEvent));
+    }
+    function openEventDialog() {
+      $('#entryType').value = 'action';
+      $('#entryTitle').value = '';
+      $('#entryDate').value = selectedCalendarDate;
+      $('#entryTime').value = '';
+      $('#entryTitle').placeholder = 'For example, a walk or a wellbeing action';
+      $('#entryPlanContext').classList.remove('hidden');
+      const plan = getSelectedPlan();
+      $('#entryPlanContext').textContent = plan
+        ? 'A planned action will be linked to ' + plan.title + '. This demo has no written activity content yet.'
+        : 'No plan is selected. You can still add a standalone sample action; it won’t contain exercise or wellbeing instructions.';
+      $('#eventDialog').showModal();
+      $('#entryTitle').focus();
+    }
+    function removeCalendarEvent(id) {
+      const item = calendarEvents.find(event => event.id === id);
+      if (!item || !confirm('Remove “' + item.title + '” from your calendar?')) return;
+      calendarEvents = calendarEvents.filter(event => event.id !== id);
+      completionLog = completionLog.filter(log => log.eventId !== id);
+      save();
+      renderCalendar();
+      updateHome();
+    }
+    function openCompletionDialog(id) {
+      const item = calendarEvents.find(event => event.id === id && event.type === 'action' && !event.completedAt);
+      if (!item) return;
+      completionEventId = id;
+      completionRatings = {};
+      $('#completeActionContext').textContent = item.title + (item.planTitle ? ' · ' + item.planTitle : '') + ' · ' + prettyDate(item.date);
+      $$('.rating[data-feedback-rating]').forEach(group => renderRatingGroup(group, group.dataset.feedbackRating, completionRatings));
+      $('#completeForm').reset();
+      $('#completeDialog').showModal();
+    }
+    function startOfWeek(date) {
+      return new Date(date.getFullYear(), date.getMonth(), date.getDate() - ((date.getDay() + 6) % 7));
+    }
+    function saveWeeklyCheckin() {
+      const plan = getSelectedPlan();
+      if (!plan) {
+        toast('Choose a plan before saving this check-in.');
+        return;
+      }
+      if (['manage', 'energy', 'enjoy'].some(kind => !weeklyRatings[kind])) {
+        toast('Choose a rating for each question first.');
+        return;
+      }
+      const today = new Date();
+      checkins.push({
+        date: today.toISOString(),
+        day: dateKey(today),
+        planId: plan.id,
+        planTitle: plan.title,
+        note: $('#note').value.trim(),
+        ratings: { ...weeklyRatings },
+        nextPreference: $('#weekPreference').value || ''
+      });
+      weeklyRatings = {};
       save();
       $('#note').value = '';
+      $('#weekPreference').value = '';
+      renderCheckin();
       $('#checkinSuccess').classList.remove('hidden');
       updateHome();
       setTimeout(() => $('#checkinSuccess').classList.add('hidden'), 4000);
+    }
+
+    $$('.rating[data-rating]').forEach(group => renderRatingGroup(group, group.dataset.rating, weeklyRatings));
+    $('#saveCheckin').onclick = saveWeeklyCheckin;
+    $('#scheduleActionBtn').onclick = () => show('calendar');
+    $('#addCalendarEntry').onclick = openEventDialog;
+    $('#prevMonth').onclick = () => {
+      const selected = parseDateKey(selectedCalendarDate);
+      visibleCalendarMonth = new Date(visibleCalendarMonth.getFullYear(), visibleCalendarMonth.getMonth() - 1, 1);
+      const day = Math.min(selected.getDate(), new Date(visibleCalendarMonth.getFullYear(), visibleCalendarMonth.getMonth() + 1, 0).getDate());
+      selectedCalendarDate = dateKey(new Date(visibleCalendarMonth.getFullYear(), visibleCalendarMonth.getMonth(), day));
+      renderCalendar();
     };
+    $('#nextMonth').onclick = () => {
+      const selected = parseDateKey(selectedCalendarDate);
+      visibleCalendarMonth = new Date(visibleCalendarMonth.getFullYear(), visibleCalendarMonth.getMonth() + 1, 1);
+      const day = Math.min(selected.getDate(), new Date(visibleCalendarMonth.getFullYear(), visibleCalendarMonth.getMonth() + 1, 0).getDate());
+      selectedCalendarDate = dateKey(new Date(visibleCalendarMonth.getFullYear(), visibleCalendarMonth.getMonth(), day));
+      renderCalendar();
+    };
+    $('#entryType').onchange = () => {
+      const planned = $('#entryType').value === 'action';
+      $('#entryPlanContext').classList.toggle('hidden', !planned);
+      $('#entryTitle').placeholder = planned ? 'For example, a walk or a wellbeing action' : 'For example, a birthday or appointment';
+    };
+    $('#eventForm').onsubmit = event => {
+      event.preventDefault();
+      const title = $('#entryTitle').value.trim();
+      if (!title || !$('#entryDate').value) return;
+      const plan = $('#entryType').value === 'action' ? getSelectedPlan() : null;
+      calendarEvents.push({
+        id: (crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + Math.random().toString(36).slice(2)),
+        title,
+        type: $('#entryType').value,
+        date: $('#entryDate').value,
+        time: $('#entryTime').value || '',
+        planId: plan?.id || '',
+        planTitle: plan?.title || '',
+        createdAt: new Date().toISOString(),
+        completedAt: ''
+      });
+      save();
+      $('#eventDialog').close();
+      selectedCalendarDate = $('#entryDate').value;
+      const selected = parseDateKey(selectedCalendarDate);
+      visibleCalendarMonth = new Date(selected.getFullYear(), selected.getMonth(), 1);
+      renderCalendar();
+      updateHome();
+      toast('Added to your calendar.');
+    };
+    $('#cancelEvent').onclick = () => $('#eventDialog').close();
+    $('#closeEventDialog').onclick = () => $('#eventDialog').close();
+    $('#completeForm').onsubmit = event => {
+      event.preventDefault();
+      const item = calendarEvents.find(entry => entry.id === completionEventId && !entry.completedAt);
+      const energyAfter = $('input[name="energyAfter"]:checked')?.value;
+      const nextPreference = $('#nextActionPreference').value;
+      if (!item) return;
+      if (!completionRatings.manage || !completionRatings.enjoy || !energyAfter || !nextPreference) {
+        toast('Complete each feedback question to save this action.');
+        return;
+      }
+      const completedAt = new Date();
+      item.completedAt = completedAt.toISOString();
+      completionLog.push({
+        eventId: item.id,
+        title: item.title,
+        planId: item.planId,
+        planTitle: item.planTitle,
+        date: dateKey(completedAt),
+        completedAt: completedAt.toISOString(),
+        ratings: { ...completionRatings, energyAfter },
+        nextPreference
+      });
+      done['action-' + item.id] = true;
+      save();
+      $('#completeDialog').close();
+      renderCalendar();
+      updateHome();
+      toast('Action complete. Your next-time preference is saved.');
+    };
+    $('#cancelComplete').onclick = () => $('#completeDialog').close();
+    $('#closeCompleteDialog').onclick = () => $('#completeDialog').close();
+
     function toast(message) {
       const element = document.createElement('div');
       element.className = 'toast';
@@ -555,8 +899,8 @@
       setTimeout(() => element.remove(), 2200);
     }
     $('#resetBtn').onclick = () => {
-      if (confirm('Clear this demo’s saved routine and check-ins from this browser?')) {
-        [...keys, ...previousKeys].forEach(key => localStorage.removeItem(key));
+      if (confirm('Clear this demo’s saved routine, calendar entries and check-ins from this browser?')) {
+        [...keys, ...previousKeys, eventKey, completionKey].forEach(key => localStorage.removeItem(key));
         location.reload();
       }
     };

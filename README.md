@@ -11,9 +11,9 @@ The welcome page explains what the demo can do and how to add it to a phone. The
 
 ## What this prototype does
 
-The demo asks users to choose a main goal and up to two other priorities, then collects a small amount of preference and availability information. It shows up to three draft plan choices and includes a local check-in. Full plan actions are not yet written.
+The demo asks users to choose a main goal and up to two other priorities, then collects preference and availability information. It shows up to three draft plan choices, a monthly calendar for personal dates and sample actions, a completion flow with feedback, and a weekly check-in linked to the selected plan. Full plan actions are not yet written, so calendar actions are entries the tester adds themselves.
 
-There is no account, payment, secure database, coach inbox, or server-side storage. Questionnaire answers and check-ins stay in local browser storage on the device being used. Do not enter real customer or health information. The prototype does not assess health conditions or provide medical, exercise, or nutrition advice.
+There is no account, payment, secure database, coach inbox, notification system, or server-side storage. Questionnaire answers, check-ins, calendar entries, and completion feedback stay in local browser storage on the device being used and are not shared with Arclora. Do not enter real customer or health information. The prototype does not assess health conditions or provide medical, exercise, or nutrition advice, and it does not automatically change a plan based on feedback.
 
 ## Install on a phone
 
