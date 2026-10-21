@@ -1,37 +1,29 @@
-# Arclora app prototype
+# Arclora
 
-This is a small installable web app prototype. It runs without an account or server database; questionnaire answers, selected plan preference, and check-ins stay in this browser's local storage.
+Arclora is an early, installable web app prototype for exploring personal wellbeing routines.
 
-## Questionnaire in this prototype
+## Public links
 
-The onboarding asks users to choose one main goal and up to two other priorities, then gives a short follow-up for each selected goal. It asks how often and for how long an action can fit into a typical week, plus optional preferences for the time of day, practical barriers, and (when movement is a goal) activities they enjoy or prefer to avoid. Food preferences appear only when a food or meal-planning goal is selected. When movement is part of a selected goal, it also asks a general safety question without requesting a diagnosis. A cautious answer pauses movement suggestions in the demo. After the questionnaire, the app shows up to three draft plan choices matched mainly to selected goals and movement setting; preferences are saved locally to guide plan content as it is written. Full plan actions are placeholders to be added later. Habit-change goals involving smoking or alcohol point toward specialist support rather than offering a quitting or alcohol-reduction plan.
+- Welcome page: <https://rocco-coding.github.io/amplio-app/>
+- Open the demo directly: <https://rocco-coding.github.io/amplio-app/app.html>
 
-The weekly check-in uses structured choices about what worked and what the user would change. Feedback is saved only on the device and does not automatically modify plan choices. The prototype does not assess health conditions or give medical, exercise, or nutrition advice. Do not enter real customer or health information. Smoking and alcohol choices show a reminder to seek appropriate specialist support; they do not open a verified service directory or provide a change plan. A future version must have suitable privacy information, secure storage, verified support links, and a reviewed safety approach before collecting such information.
+The welcome page explains what the demo can do and how to add it to a phone. The demo itself is `app.html`.
 
-No payment is taken in this demo. A future paid membership should show its full recurring price and terms before the detailed questionnaire begins.
+## What this prototype does
 
-## Preview on your Mac
+The demo asks users to choose a main goal and up to two other priorities, then collects a small amount of preference and availability information. It shows up to three draft plan choices and includes a local check-in. Full plan actions are not yet written.
 
-Open `index.html` in a browser to look at the interface. For the install prompt and offline caching to work, publish it to an HTTPS website (or run a local web server).
+There is no account, payment, secure database, coach inbox, or server-side storage. Questionnaire answers and check-ins stay in local browser storage on the device being used. Do not enter real customer or health information. The prototype does not assess health conditions or provide medical, exercise, or nutrition advice.
 
-## Publish for phone installation
+## Install on a phone
 
-The simplest no-monthly-fee route for this static demo is GitHub Pages. Its free plan supports Pages for public repositories. A public repository means the app's source files are visible, so this is suitable only while it contains demo-only behavior and no customer data.
+- **iPhone/iPad:** Open the welcome page in Safari, tap **Share → Add to Home Screen**, enable **Open as Web App** if shown, then tap **Add**.
+- **Android:** Open the welcome page in Chrome, tap the three-dot menu, choose **Install and create shortcut** or **Install app**, then follow the prompt.
 
-1. Sign in to GitHub and create a new **public** repository, for example `amplio-app`.
-2. Upload the app files from this folder (`index.html`, `manifest.webmanifest`, `sw.js`, and all four `icon-v3` files).
-3. In the repository, open **Settings → Pages**. Under **Build and deployment**, choose **Deploy from a branch**, select `main` and `/ (root)`, then save.
-4. Wait for GitHub Pages to publish the site. The address will look like `https://YOUR-USERNAME.github.io/amplio-app/`.
-5. On iPhone, open that address in Safari, tap **Share → Add to Home Screen**, turn on **Open as Web App** if shown, and tap **Add**. On Android, open the address in Chrome and choose **Install app** or **Add to Home screen** from the browser menu.
+On iPhone, Apple requires the user to add the web app through Safari’s Share menu. Android browsers may offer a one-tap install prompt.
 
-GitHub's current setup guide: https://docs.github.com/en/pages/quickstart
+## Publishing updates
 
-## Updates after installation
+The site uses GitHub Pages from the repository’s `main` branch and root folder. Publish the updated files to the repository and GitHub Pages will redeploy the welcome page and app. The existing home-screen app continues to work; if it opens the welcome page once after this change, tap **Open the demo**. Future launches go straight to the app.
 
-The app checks for a newer release when it opens online and uses the latest page and app files from the website. People do not need to reinstall it. If an app is already open during a release, it will use the update the next time it opens or reloads online. When offline, it uses the last version saved on that device. The service worker only caches app pages and static files; it does not cache API responses or user data.
-
-The phone's home-screen icon and display name are managed separately by iOS or Android. Arclora uses versioned icon files and declares an iPhone home-screen icon and title, so devices can notice the new branding. An operating system may still keep an existing shortcut's saved name or icon; if that happens, remove and add the shortcut again. App content updates do not require this.
-
-## Before inviting real customers
-
-This prototype has no login, coach inbox, server-side storage, access controls, privacy notice, or health/safety review. Do not use it to collect real customers' personal or health information. Those pieces need to be designed and secured before handling customer data.
+The current GitHub Pages address is easy to share and does not require a monthly hosting fee. A shorter custom domain can be connected later if one is purchased and configured.

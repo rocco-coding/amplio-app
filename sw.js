@@ -1,7 +1,8 @@
-const CACHE_NAME = 'amplio-app-shell-v5';
+const CACHE_NAME = 'arclora-app-shell-v1';
 const APP_SHELL = [
   './',
   './index.html',
+  './app.html',
   './manifest.webmanifest',
   './icon-v3.svg',
   './icon-v3-180.png',
@@ -25,7 +26,7 @@ self.addEventListener('activate', event => {
     await Promise.all(cacheNames
       .filter(name => (
         name === 'amplio-demo-v1' ||
-        (name.startsWith('amplio-app-shell-') && name !== CACHE_NAME)
+        ((name.startsWith('amplio-app-shell-') || name.startsWith('arclora-app-shell-')) && name !== CACHE_NAME)
       ))
       .map(name => caches.delete(name)));
     await self.clients.claim();
